@@ -58,7 +58,7 @@ document:
   section: Notice for the family of the child who was bitten
 ```
 
-`section` is a heading in the document, spelled exactly. Use `Heading > Sub-heading` for a nested one, for example `Notice for the family of the child who was bitten > Training example` to show only the filled-in example. `document` can have variants (a list of `{ when, id, section }`, the last one without `when`). The lint fails if the document or the section does not exist.
+`section` is a heading in the document, spelled exactly. Use `Heading > Sub-heading` for a nested one, for example `Notice for the family of the child who was bitten > Completed notice` to show only the filled-in copy. `document` can have variants (a list of `{ when, id, section }`, the last one without `when`). The lint fails if the document or the section does not exist.
 
 `form` nodes list which form sections are worked on now and which come later:
 

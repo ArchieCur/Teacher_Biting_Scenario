@@ -186,16 +186,19 @@ test('no network requests leave the page', async ({ page }) => {
   expect(external).toEqual([]);
 });
 
-test('the Parent Notice shows as a paper card at 3.1, with blanks announced as "blank"', async ({ page }) => {
+test('the Parent Notice shows as a paper card at 3.1: the completed copy only, about one phone screen', async ({ page }) => {
   await page.goto(MODULE);
   await page.getByRole('button', { name: 'Begin' }).click();
   await playUntil(page, '3.1');
   const paper = page.locator('.paper');
   await expect(paper.getByRole('heading', { name: 'Parent Notice' })).toBeVisible();
-  await expect(paper).toContainText('Notice for the family of the child who was bitten');
+  await expect(paper.getByRole('heading', { name: 'Completed notice' })).toBeVisible();
   await expect(paper).toContainText('A.K. was bitten by another child on the right forearm');
   await expect(paper).not.toContainText('D.M.');
-  await expect(paper.locator('.blank .sr-only').first()).toHaveText('blank');
+  await expect(paper.locator('.blank')).toHaveCount(0);
+  const height = await paper.evaluate((el) => el.getBoundingClientRect().height);
+  const screen = await page.evaluate(() => window.innerHeight);
+  expect(height, `card is ${Math.round(height)} px at a ${screen} px screen`).toBeLessThanOrEqual(screen);
   await expectNoAxeViolations(page, 'Parent Notice at 3.1');
 });
 

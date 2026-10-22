@@ -92,7 +92,7 @@ policy:
 # Documents a node can show as a paper card, with  document: { id, section }
 documents:
   parentNotice:
-    file: source/Parent_Notice_v1.0.md
+    file: source/Parent_Notice_v1.1.md
     title: Parent Notice
 
 # The in-scenario reporting form. Section titles and field labels must match

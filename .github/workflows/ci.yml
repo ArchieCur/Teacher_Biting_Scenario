@@ -23,6 +23,21 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Tell GitHub to hide every banned-strings entry (as written, lower case
+      # and upper case) anywhere in this run's logs, in case any later step
+      # quotes text that contains one. GitHub never prints these commands.
+      - name: Hide banned strings in logs
+        env:
+          BANNED_STRINGS: ${{ secrets.BANNED_STRINGS }}
+        run: |
+          printf '%s\n' "$BANNED_STRINGS" | while IFS= read -r line; do
+            line="$(printf '%s' "$line" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            case "$line" in ''|'#'*) continue ;; esac
+            echo "::add-mask::$line"
+            echo "::add-mask::$(printf '%s' "$line" | tr '[:upper:]' '[:lower:]')"
+            echo "::add-mask::$(printf '%s' "$line" | tr '[:lower:]' '[:upper:]')"
+          done
+
       - name: Install
         run: npm ci
 

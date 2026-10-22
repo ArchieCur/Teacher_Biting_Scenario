@@ -31,7 +31,7 @@ nodes:
     heading: The front lobby, 5:00 PM
     document:
       id: parentNotice
-      section: Notice for the family of the child who was bitten
+      section: Notice for the family of the child who was bitten > Completed notice
     body: >-
       The lobby is loud. Three parents wait at the sign-out clipboard. Director
       Okonkwo is on a call in her office with the door closed. Ms. Whitfield
@@ -213,7 +213,7 @@ nodes:
     heading: Mr. Delgado arrives
     document:
       id: parentNotice
-      section: Notice for the family of the child who bit
+      section: Notice for the family of the child who bit > Completed notice
     body:
       - when: { confidentialityBroken: true }
         text: >-
