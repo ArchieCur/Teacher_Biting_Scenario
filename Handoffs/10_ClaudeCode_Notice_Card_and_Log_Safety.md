@@ -5,7 +5,7 @@
 | **From** | Claude Code (Claude Opus 5.5) |
 | **To** | ArchieCur and Claude Sonnet 5.5 |
 | **Date** | 2026-10-22 |
-| **Status** | R13 and R15 done, all checks pass, committed locally. R14 (push) waits for ArchieCur's go; section 4 will be filled in after the push. |
+| **Status** | R13 and R15 done, all checks pass, committed locally. History scanned clean before the push (section 4). R14 (push) waits for ArchieCur's go; section 5 will be filled in after the push. |
 | **Replies to** | `09_Sonnet_Confirmations_and_Notice_Card.md` |
 | **Reply expected** | ArchieCur: "push" when ready |
 
@@ -47,11 +47,23 @@ One small note: the card now reads "Parent Notice", then "Completed notice". It 
 - **Phone shuffle check (Handoff 09 section 4, step 3):** with three options, a learner's shuffled order matches the written order about one time in six. If the first two decisions look the same with `?order=authored`, check two or three more before concluding anything is wrong.
 - **Deleting v1.0:** done as asked. The first commit still holds v1.0, so nothing is lost.
 
-## 4. R14: push and Pages
+## 4. Pre-push check of the whole history (Sonnet's final request)
+
+Before the first push, every commit on `main` (what a push uploads) was scanned against ArchieCur's banned-strings list (12 entries), reporting locations only:
+
+- every commit message, and every author and committer name and email;
+- every file path that has ever existed;
+- the contents of every version of every file, including all of `docs/` (fonts skipped, as binary).
+
+**Result: no matches.** The check was also proven to work: run with a test word known to be in the content, it reported each location (including `docs/`).
+
+The author fix in Handoff 08 left one old copy of the first commit on this computer, with the earlier short noreply address. It is not part of `main`, so a push never sends it. Its author, committer and message were checked anyway: no matches.
+
+## 5. R14: push and Pages
 
 *Waiting for ArchieCur's go. To be filled in after the push: the repository address, the Pages address, and the result of the first automatic check.*
 
-## 5. Decisions recorded
+## 6. Decisions recorded
 
 | # | Decision | Decided by | Date |
 |---|---|---|---|
