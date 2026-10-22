@@ -5,7 +5,7 @@
 | **From** | Claude Code (Claude Opus 5.5) |
 | **To** | ArchieCur and Claude Sonnet 5.5 |
 | **Date** | 2026-10-22 |
-| **Status** | R13 and R15 done, all checks pass, committed locally. History scanned clean before the push (section 4). R14 (push) waits for ArchieCur's go; section 5 will be filled in after the push. |
+| **Status** | R13 and R15 done, all checks pass, committed locally. History scanned clean before the push (section 4). Pushed; Pages live; first automatic check hung on the browser install and was fixed (section 5). |
 | **Replies to** | `09_Sonnet_Confirmations_and_Notice_Card.md` |
 | **Reply expected** | ArchieCur: "push" when ready |
 
@@ -61,10 +61,27 @@ The author fix in Handoff 08 left one old copy of the first commit on this compu
 
 ## 5. R14: push and Pages
 
-*Waiting for ArchieCur's go. To be filled in after the push: the repository address, the Pages address, and the result of the first automatic check.*
+**Pushed** on 2026-10-22 with ArchieCur's go (D43): four commits on `main` to https://github.com/ArchieCur/Teacher_Biting_Scenario.
+
+**Pages** (Settings > Pages > `main`, folder `/docs`):
+
+| Page | Address |
+|---|---|
+| Landing page | https://archiecur.github.io/Teacher_Biting_Scenario/ |
+| The scenario | https://archiecur.github.io/Teacher_Biting_Scenario/biting-incident/index.html |
+| For volunteers | the scenario address with `?timing=1` added |
+| Content preview | https://archiecur.github.io/Teacher_Biting_Scenario/previews/biting-incident.html |
+| Storyline harness | https://archiecur.github.io/Teacher_Biting_Scenario/storyline-harness.html |
+
+Pages was first set to the root folder, which published the README. Switching to `/docs` fixed it. ArchieCur played the scenario through on the live site.
+
+**First automatic check: cancelled, not failed.** On GitHub's computer, every check of the scenario passed: hiding the banned strings in the log, the full lint (including public safety against the `BANNED_STRINGS` secret), the unit tests, and `docs/` matching a fresh build (so a Linux build is byte-for-byte the same as the Windows one). Then "Install browser for tests" hung until GitHub's 6-hour limit cancelled the run, so the browser tests never ran. GitHub's notes on the run say the standard `ubuntu-latest` computer is moving to a new Ubuntu version this month; the browser installer most likely stopped at a system prompt on that version. A further note said the checkout and setup-node actions (v4) are deprecated.
+
+**Fix (D45):** the workflow now runs on `ubuntu-24.04` (a version the installer supports), answers system prompts automatically, uses `actions/checkout@v5` and `actions/setup-node@v5`, and has time limits: 10 minutes each for the browser install and the browser tests, 30 minutes for the whole run. A stuck step now stops in minutes, not hours. The result of the next run will be reported in the next Handoff.
 
 ## 6. Decisions recorded
 
 | # | Decision | Decided by | Date |
 |---|---|---|---|
 | D44 | The GitHub check hides every banned-strings entry in its logs (as written, lower case, upper case) | Claude Code, for R15 | 2026-10-22 |
+| D45 | The GitHub check runs on a fixed Ubuntu version (24.04) with time limits and current action versions | Claude Code, after the first run hung | 2026-10-22 |
