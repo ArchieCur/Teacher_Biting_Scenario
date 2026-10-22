@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storyline test harness</title>
+<!--
+  Test page for the Storyline completion bridge, without Storyline.
+  It pretends to be the Storyline player:
+    - Route A: it defines GetPlayer() with a SetVar() that logs the call.
+    - Route B: it listens for the module's postMessage.
+  The build copies this file into docs/ and fills in the module list.
+-->
+<style>
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; color: #243A78; background: #F8F4EE; margin: 0; padding: 1rem; line-height: 1.5; }
+h1 { font-size: 1.4rem; margin: 0 0 .5rem; }
+.panel { background: #fff; border-radius: 12px; padding: 1rem 1.25rem; box-shadow: 0 2px 10px rgba(36,58,120,.1); margin-bottom: 1rem; }
+.controls { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: end; }
+label { display: flex; flex-direction: column; font-weight: 600; font-size: .9rem; }
+.check { flex-direction: row; align-items: center; gap: .4rem; }
+select, input[type=text] { font: inherit; padding: .4rem; border: 1px solid #243A78; border-radius: 6px; min-height: 44px; }
+button { font: inherit; font-weight: 600; min-height: 44px; padding: .5rem 1.25rem; border-radius: 999px; border: 0; background: #4560D2; color: #fff; cursor: pointer; }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid #4560D2; outline-offset: 2px; }
+.status { display: flex; flex-wrap: wrap; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+.status li { padding: .35rem .9rem; border-radius: 999px; background: #FFF1B8; font-weight: 600; }
+.status li.ok { background: #EAF8F1; box-shadow: inset 0 0 0 2px #35C27C; }
+.note { background: #FDE7E3; border-radius: 8px; padding: .5rem .75rem; }
+.frame-wrap { overflow-x: auto; }
+iframe { display: block; border: 2px solid #243A78; border-radius: 8px; background: #fff; width: 100%; height: 80vh; margin: 0 auto; }
+#log { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; max-height: 12rem; overflow: auto; background: #F8F4EE; padding: .5rem; border-radius: 6px; margin: .5rem 0 0; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h1>Storyline test harness</h1>
+  <p>This page stands in for the Storyline player. Play the module below to the end and watch the status chips. No data leaves this page.</p>
+  <p id="file-note" class="note" hidden>You opened this page from a folder (file://). Browsers treat each local file as a separate site, so route A cannot work here, but route B can. To test route A, run <code>npm run serve</code> and open the address it prints.</p>
+  <form id="controls" class="controls">
+    <label>Module <select id="module"></select></label>
+    <label>Completion route
+      <select id="route">
+        <option value="both">Both (what ships)</option>
+        <option value="a">A only: GetPlayer()</option>
+        <option value="b">B only: postMessage</option>
+      </select>
+    </label>
+    <label>Frames between this page and the module
+      <select id="nest">
+        <option value="0">0 (direct)</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </label>
+    <label>Frame width
+      <select id="width">
+        <option value="100%">Full width</option>
+        <option value="320px">320 px</option>
+        <option value="375px">375 px</option>
+        <option value="768px">768 px</option>
+        <option value="1280px">1280 px</option>
+      </select>
+    </label>
+    <label>Storyline variable <input id="variable" type="text" size="18"></label>
+    <label class="check"><input id="storage" type="checkbox"> Simulate blocked storage</label>
+    <label class="check"><input id="timing" type="checkbox"> Timing log</label>
+    <button type="submit">Load module</button>
+  </form>
+</div>
+
+<div class="panel">
+  <ul class="status" aria-live="polite">
+    <li id="status-a">Route A: waiting</li>
+    <li id="status-b">Route B: waiting</li>
+  </ul>
+  <pre id="log" aria-label="Event log"></pre>
+</div>
+
+<div class="frame-wrap"><iframe id="frame" title="Scenario module"></iframe></div>
+
+<script>
+(function () {
+  var MODULES = /*{{modules}}*/[];
+  var params = new URLSearchParams(location.search);
+  var $ = function (id) { return document.getElementById(id); };
+  var logEl = $('log');
+  var expected = '';
+
+  function log(text) {
+    var time = new Date().toLocaleTimeString();
+    logEl.textContent += '[' + time + '] ' + text + '\n';
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function mark(route, detail) {
+    var chip = $('status-' + route);
+    chip.textContent = 'Route ' + route.toUpperCase() + ': completion received' + (detail ? ' (' + detail + ')' : '');
+    chip.className = 'ok';
+  }
+
+  function reset() {
+    $('status-a').textContent = 'Route A: waiting';
+    $('status-b').textContent = 'Route B: waiting';
+    $('status-a').className = '';
+    $('status-b').className = '';
+  }
+
+  // Route A: the stub Storyline player.
+  var vars = {};
+  window.GetPlayer = function () {
+    return {
+      SetVar: function (name, value) {
+        vars[name] = value;
+        log('Route A: SetVar("' + name + '", ' + value + ')');
+        if (name === expected && value === true) mark('a');
+        else log('Route A: variable name does not match "' + expected + '"');
+      },
+      GetVar: function (name) { return vars[name]; }
+    };
+  };
+
+  // Route B: the listener a Storyline "Execute JavaScript" trigger would add.
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.source !== 'scenario-engine') return;
+    log('Route B: message ' + JSON.stringify(e.data) + ' from origin ' + e.origin);
+    if (e.data.type === 'complete') mark('b', 'origin ' + e.origin);
+  });
+
+  if (location.protocol === 'file:') $('file-note').hidden = false;
+
+  MODULES.forEach(function (m) {
+    var opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = m.title + ' (' + m.id + ')';
+    $('module').appendChild(opt);
+  });
+  if (params.get('module')) $('module').value = params.get('module');
+
+  function currentModule() {
+    var id = $('module').value;
+    for (var i = 0; i < MODULES.length; i++) if (MODULES[i].id === id) return MODULES[i];
+    return MODULES[0];
+  }
+
+  function syncVariable() {
+    var m = currentModule();
+    if (m) $('variable').value = m.variable;
+  }
+  $('module').addEventListener('change', syncVariable);
+  syncVariable();
+
+  function load(event) {
+    if (event) event.preventDefault();
+    var m = currentModule();
+    if (!m) { log('No modules found. Run npm run build.'); return; }
+    reset();
+    expected = $('variable').value.trim();
+    var q = ['sv=' + encodeURIComponent(expected), 'bridge=' + $('route').value];
+    if ($('storage').checked) q.push('storage=off');
+    if ($('timing').checked) q.push('timing=1');
+    var src = m.id + '/index.html?' + q.join('&');
+    var nest = Number($('nest').value);
+    if (nest > 0) src = 'harness-relay.html?depth=' + nest + '&src=' + encodeURIComponent(src);
+    $('frame').style.width = $('width').value;
+    $('frame').src = src;
+    log('Loaded ' + src);
+  }
+  $('controls').addEventListener('submit', load);
+  load();
+})();
+</script>
+</body>
+</html>

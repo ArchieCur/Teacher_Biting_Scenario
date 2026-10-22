@@ -1,0 +1,28 @@
+# Deliberately broken module for the lint tests. Not built, not shipped.
+id: broken-module
+title: Broken fixture
+lang: en
+start: a
+scenes: [s]
+disclosure: Fixture.
+characters:
+  children:
+    - initials: D.M.
+  adults:
+    - name: Ms. Lee
+flags:
+  neverSet: { default: false, description: Read but never set. }
+  neverRead: { default: false, description: Set but never read. }
+  hidden: { default: false, description: Used by showIf. }
+storyline:
+  variable: Done
+form:
+  title: Fixture form
+  source: form.md
+  sections:
+    - id: "1"
+      title: General Information
+      fields:
+        - { id: when, label: Date of Incident, kind: text }
+        - { id: skin, label: Did the bite break the skin?, kind: choice, options: ["Yes", "No"] }
+        - { id: invented, label: A label the source form does not have, kind: text }

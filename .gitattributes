@@ -1,0 +1,5 @@
+# Same line endings on every computer, so the docs/ freshness check gives the
+# same answer on Windows, Mac and GitHub.
+* text=auto eol=lf
+*.woff2 binary
+scripts/hooks/* text eol=lf

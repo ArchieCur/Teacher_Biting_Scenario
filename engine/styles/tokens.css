@@ -1,0 +1,28 @@
+/* Design tokens. scripts/check-contrast.js reads the hex values below and
+   checks every pair listed in scripts/contrast-pairs.json. Change a color here
+   and run `npm run lint` to re-verify contrast. */
+
+:root {
+  --ink: #243A78;
+  --paper: #F8F4EE;
+  --white: #FFFFFF;
+  --sun: #FFDE59;
+  --leaf: #35C27C;
+  --cobalt: #4560D2;
+  --sky: #A8DFF0;
+  --coral: #EE5A47;
+  --leaf-tint: #EAF8F1;
+  --sun-tint: #FFF1B8;
+  --coral-tint: #FDE7E3;
+  --sky-50: #D4EFF8; /* --sky at 50% over white: form write-in fill */
+
+  /* Not colors, so not checked for contrast. */
+  --shadow: 0 2px 4px rgba(36, 58, 120, 0.06), 0 6px 18px rgba(36, 58, 120, 0.1);
+  --radius: 12px;
+  --gutter: 1rem;
+
+  --font-head: 'Anybody', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  color-scheme: light;
+}

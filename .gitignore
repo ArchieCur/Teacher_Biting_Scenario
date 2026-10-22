@@ -1,0 +1,12 @@
+# The banned-strings list is private. Never commit it (Handoff 01 section 12).
+.banned-strings*
+
+node_modules/
+.dev/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Public-safety check on every commit. Installed by `npm install`
+# (it sets git's core.hooksPath to scripts/hooks).
+node scripts/check-public-safety.js --staged || {
+  echo ""
+  echo "Commit stopped by the public-safety check. Nothing was committed."
+  exit 1
+}

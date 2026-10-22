@@ -1,0 +1,316 @@
+# Scene 2: Nap time. 12:40 PM, Room 4.
+# Policy step covered: 5 (document on the Biting Incident Reporting Form).
+# The form's sections 1 to 3 are filled now. Sections 4 and 5 wait for pickup.
+
+id: nap-time
+title: Nap time
+clock: "12:40 PM"
+place: Room 4
+
+nodes:
+  - id: "2.0"
+    type: story
+    heading: The form is open on your clipboard
+    body:
+      - when: { jottedNote: true }
+        text: >-
+          It is 12:40. The lights are low and eighteen children are on their
+          mats. You have about twenty minutes. Your sticky note is in your
+          pocket: 10:15, block center, toy fire truck, right forearm, red mark.
+
+
+          The reporting form has five sections. Sections 1 to 3 cover what
+          happened. Sections 4 and 5 depend on things that haven't happened yet.
+      - text: >-
+          It is 12:40. The lights are low and eighteen children are on their
+          mats. You have about twenty minutes. You try to rebuild the morning
+          from memory, and the details are already soft.
+
+
+          The reporting form has five sections. Sections 1 to 3 cover what
+          happened. Sections 4 and 5 depend on things that haven't happened yet.
+    next: "2.1"
+
+  - id: "2.1"
+    type: form
+    heading: "Sections 1 to 3: what happened"
+    body: >-
+      Start with the facts: when, where, who, what was happening right before,
+      and what you saw. Only what you saw and heard.
+    sections:
+      active: ["1", "2", "3"]
+      later: ["4", "5"]
+      laterNote: Complete these after pickup.
+    summary: Incident wording
+    prompt: Which wording goes on the form?
+    choices:
+      - id: 2.1-a
+        label:
+          - when: { jottedNote: true }
+            text: >-
+              Time 10:15, block center. Both reached for the toy fire truck.
+              D.M. bit A.K. on the right forearm, leaving a faint red mark.
+          - text: >-
+              Around 10:15, I think. Both reached for a toy fire truck. D.M.
+              bit A.K. on the right forearm, leaving a red mark.
+        tone: held
+        consequence:
+          - when: { jottedNote: true }
+            text: >-
+              You copy from your note. The time and the details line up, and
+              the section takes four minutes.
+          - text: >-
+              You piece it together from memory and write "around 10:15"
+              because you aren't certain. It is honest, and it took longer than
+              it should have.
+        why: >-
+          The form asks for what you saw and heard: who, where, what, and what
+          the mark looked like. Facts you can stand behind keep the record fair
+          to both children.
+        fill:
+          incidentDate: October 21, 2026
+          incidentTime:
+            - when: { jottedNote: true }
+              value: "10:15 AM"
+            - value: "Around 10:15 AM"
+          location: Room 4, block center
+          staffPresent:
+            - when: { calledForHelp: true }
+              value: Nina Rodriguez. Ms. Lee arrived after the bite.
+            - value: Nina Rodriguez
+          childBitten: A.K.
+          childWhoBit: D.M.
+          before: Both children reached for the same toy fire truck during free play.
+          after: D.M. bit A.K. on the right forearm. A faint red mark is visible.
+        next: "2.2"
+      - id: 2.1-b
+        label: >-
+          D.M. viciously attacked A.K. for no reason, and left a bad mark on
+          her arm.
+        tone: risk
+        consequence: >-
+          The words feel true in the moment. But "attacked" and "for no reason"
+          are your reactions, not what you observed. Anyone who reads the form
+          will read D.M. through them.
+        why: >-
+          The form should record what you saw and heard, not what you
+          concluded. Labels like "viciously" can follow a three-year-old into
+          the Director's file and into a parent's questions.
+        fill:
+          incidentDate: October 21, 2026
+          incidentTime:
+            - when: { jottedNote: true }
+              value: "10:15 AM"
+            - value: "Around 10:15 AM"
+          location: Room 4, block center
+          staffPresent:
+            - when: { calledForHelp: true }
+              value: Nina Rodriguez. Ms. Lee arrived after the bite.
+            - value: Nina Rodriguez
+          childBitten: A.K.
+          childWhoBit: D.M.
+          before: Unprovoked. D.M. attacked A.K. for no reason.
+          after: D.M. viciously attacked A.K. and left a bad mark.
+        next: "2.2"
+      - id: 2.1-c
+        label: A bite happened during play. A.K. had a mark on her arm.
+        tone: partial
+        consequence: >-
+          Nothing in it is untrue. It also says very little: not what started
+          it, not where the mark was, not whether the skin broke. The Director
+          will have to come back to you with questions.
+        why: >-
+          The form asks what was happening right before the bite and what you
+          saw after it. Specific, observable details answer those questions the
+          first time.
+        fill:
+          incidentDate: October 21, 2026
+          incidentTime:
+            - when: { jottedNote: true }
+              value: "10:15 AM"
+            - value: "Around 10:15 AM"
+          location: Room 4
+          staffPresent:
+            - when: { calledForHelp: true }
+              value: Nina Rodriguez. Ms. Lee arrived after the bite.
+            - value: Nina Rodriguez
+          childBitten: A.K.
+          childWhoBit: D.M.
+          before: During play.
+          after: A mark on her arm.
+        next: "2.2"
+
+  - id: "2.2"
+    type: form
+    heading: "Section 3: skin and first aid"
+    body:
+      - when: { checkedSkin: true }
+        text: >-
+          This morning you looked closely: a faint red mark, no break in the
+          skin. Section 3 asks what you found and what you did.
+      - text: >-
+          Section 3 asks whether the bite broke the skin. This morning you
+          washed and cooled the arm, but you didn't look closely. A.K. is
+          asleep on her mat, a few feet away.
+    sections:
+      active: ["1", "2", "3"]
+      later: ["4", "5"]
+      laterNote: Complete these after pickup.
+    summary: Skin and first aid
+    prompt: What goes in section 3?
+    choices:
+      - id: 2.2-a
+        label: Tick No for broken skin. Tick washed with soap and water, and cold compress.
+        showIf: { checkedSkin: true }
+        tone: held
+        consequence: >-
+          The section matches what you saw this morning. Nothing in it is a
+          guess.
+        why: >-
+          You can answer the skin question with confidence because you checked,
+          and the first aid boxes record what you did.
+        fill:
+          brokeSkin: "No"
+          firstAid: ["Washed with soap and water", "Applied cold compress/ice"]
+        next: "2.3"
+      - id: 2.2-b
+        label: Tick Yes for broken skin, just to be safe. A red mark is still a mark.
+        showIf: { checkedSkin: true }
+        tone: risk
+        consequence: >-
+          The form now says the skin broke. That sends the Director and a phone
+          call into motion for an injury that didn't happen, and the record no
+          longer matches what you saw.
+        why: >-
+          The skin question has two answers on purpose: it decides whether the
+          Director and a phone call are needed. Accuracy is how the form
+          protects the child.
+        fill:
+          brokeSkin: "Yes"
+          firstAid: ["Washed with soap and water", "Applied cold compress/ice"]
+        next: "2.3"
+      - id: 2.2-c
+        label: Skip the first aid boxes. Everyone knows you washed it.
+        showIf: { checkedSkin: true }
+        tone: partial
+        consequence: >-
+          The form is quicker to finish, but it no longer records what you did
+          for A.K. If anyone asks, your word is all there is.
+        why: >-
+          The first aid section is the only place the form records the care you
+          gave. A few ticks now save a long explanation later.
+        fill:
+          brokeSkin: "No"
+        next: "2.3"
+      - id: 2.2-d
+        label: Tick No for broken skin. The mark looked minor, and you wash arms like this all the time.
+        showIf: { checkedSkin: false }
+        tone: risk
+        consequence: >-
+          The form says the skin was not broken. You think that's true. But the
+          form is a record, and you can't say you checked.
+        why: >-
+          Step 2 says that if the skin breaks, the Director must be told right
+          away. Ticking No without checking skips the step that protects A.K.
+        fill:
+          brokeSkin: "No"
+          firstAid: ["Washed with soap and water", "Applied cold compress/ice"]
+        next: "2.3"
+      - id: 2.2-e
+        label: Quietly look at A.K.'s arm now, while she sleeps, and tick what you actually see.
+        showIf: { checkedSkin: false }
+        tone: held
+        consequence: >-
+          She stirs but stays asleep. The arm shows a faint red mark and no
+          break in the skin. You tick No and note that you checked at 12:50.
+        why: >-
+          A late look is better than a guess. It also means the form says when
+          you checked, which is honest about the order of events.
+        setFlags: { checkedSkin: true }
+        fill:
+          brokeSkin: "No"
+          firstAid: ["Washed with soap and water", "Applied cold compress/ice"]
+          firstAidOther: Skin checked again at 12:50 PM. No break.
+        next: "2.3"
+      - id: 2.2-f
+        label: Leave the skin question blank, and ask Director Okonkwo to look at A.K. before pickup.
+        showIf: { checkedSkin: false }
+        tone: held
+        consequence: >-
+          Director Okonkwo comes to the room at 1:10, looks at the arm, and
+          confirms a mark with no break. You tick No, knowing someone else has
+          seen it too.
+        why: >-
+          When you aren't sure, asking the Director is a sound move. Step 2
+          already puts the Director in charge of any broken-skin question.
+        fill:
+          brokeSkin: "No"
+          firstAid: ["Washed with soap and water", "Applied cold compress/ice"]
+          firstAidOther: Director checked the skin at 1:10 PM. No break.
+        next: "2.3"
+
+  - id: "2.3"
+    type: story
+    heading: Twenty minutes left
+    body: >-
+      Sections 1 to 3 are done. Section 4 asks when each parent was told, and
+      how. Section 5 needs signatures. None of that has happened yet.
+    summary: Sections 4 and 5
+    prompt: What do you do with the form?
+    choices:
+      - id: 2.3-a
+        label: >-
+          Leave sections 4 and 5 blank. Put a reminder on top of the form to
+          finish it after pickup.
+        tone: held
+        consequence: >-
+          You tuck the form under your lesson plan with a sticky note: "Finish
+          4 and 5 after pickup." Nap time ends with the form where you can find
+          it.
+        why: >-
+          Sections 4 and 5 record events that haven't happened yet. Writing
+          them afterward keeps the record true, and a reminder keeps the
+          24-hour deadline in view.
+        next: "2.d"
+      - id: 2.3-b
+        label: >-
+          Fill in section 4 now with the plan: both parents told in person at
+          pickup, around 5:00 and 5:15.
+        tone: risk
+        consequence: >-
+          It looks tidy and ready. But section 4 now describes things that
+          haven't happened, and pickup rarely goes to plan. Later you will have
+          to catch it and fix it.
+        why: >-
+          A form records what happened, not what was planned. Pre-written
+          notification times are easy to forget once the evening gets busy.
+        setFlags: { formPrefilled: true }
+        next: "2.d"
+      - id: 2.3-c
+        label: >-
+          Drop the unfinished form in the Director's inbox now so it is in, and
+          finish sections 4 and 5 later.
+        tone: partial
+        consequence: >-
+          The Director now has a form that is early but incomplete. She will
+          have to ask you about the missing sections, and track the form twice.
+        why: >-
+          Step 5 asks for the completed form within 24 hours. An early,
+          unfinished form gives the Director one more thing to chase.
+        next: "2.d"
+
+  - id: "2.d"
+    type: debrief
+    heading: What this scene was really about
+    body: >-
+      At nap time you turned a hard morning into a record. Three things
+      mattered: wording that states only what you saw, a skin check you can
+      stand behind, and not writing down events that haven't happened yet. The
+      form is for facts. Opinions belong elsewhere.
+    monday:
+      items:
+        - do: Write what you saw and heard. Leave out words like attacked or for no reason.
+          say: D.M. bit A.K. on the right forearm. A faint red mark is visible. The skin is not broken.
+        - do: If you didn't check the skin, check it now, or ask the Director to.
+        - do: Fill in only what has happened. Finish the notification section after pickup.
+    next: "3.0"

@@ -1,0 +1,66 @@
+# Engine text that is the same in every module: buttons, labels and
+# screen-reader text. Scenario text lives in each module's scenes/ folder.
+# Words in {braces} are filled in by the engine. Keep them as they are.
+# A translation is a copy of this file with the same keys (for example es.yaml).
+
+intro.begin: Begin
+intro.resumeHeading: Pick up where you left off?
+intro.resumeBody: "Your saved place: {scene}."
+intro.resume: Pick up where I left off
+intro.startOver: Start over
+intro.versionNotice: "This module was updated since your last visit, so you will start again at the beginning of {scene}."
+intro.restartNotice: "This module was updated since your last visit, so you will start from the beginning."
+intro.finishedBody: You have finished this module. You can look at your summary again or start over.
+intro.review: Show my summary
+
+header.scene: "Scene {n} of {total}"
+header.time: Time
+header.place: Place
+
+choice.lockIn: Lock in my choice
+choice.needSelection: Choose an option first.
+choice.yourChoice: Your choice
+choice.yourWords: Your words
+
+consequence.heading: What happened
+consequence.why: Why
+consequence.say: Say this
+
+continue: Continue
+
+tone.held: This held up
+tone.partial: This left a gap
+tone.risk: This opened a risk
+
+form.later: Not yet
+form.empty: Not filled in yet
+form.checked: checked
+form.unchecked: not checked
+form.updated: "Form updated: {fields}."
+
+monday.heading: What to do on Monday
+monday.say: "Say this:"
+
+wrap.glanceHeading: Your day at a glance
+wrap.timingHeading: Timing log
+wrap.timingNote: Timing is recorded on this device only. Select the text below to copy it.
+wrap.timingNode: Step
+wrap.timingDecide: Seconds to decide
+wrap.timingRead: Seconds reading feedback
+
+policy.close: Close
+policy.heading: Policy reference
+
+pause.open: Pause
+pause.heading: Taking a break
+pause.savedLocal: Your progress is saved in this browser. You can close this window. When you come back on this device and browser, you will pick up at your last locked-in choice.
+pause.savedSession: Your progress is saved only while this window stays open. If you need to close it, finish this scene first.
+pause.notSaved: Your progress could not be saved in this browser. Please finish this scene before you leave.
+pause.close: Keep going
+
+noscript: This module needs JavaScript to run. Please turn on JavaScript or open it in a different browser.
+
+dev.open: Dev
+dev.jump: Jump to step
+dev.flags: Flags
+dev.go: Go

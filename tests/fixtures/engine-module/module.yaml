@@ -1,0 +1,46 @@
+# Fixed test module for the engine tests, so they do not change when the real
+# scenario content changes. Not built, not shipped.
+id: engine-fixture
+title: Engine fixture
+lang: en
+start: p.1
+scenes: [placeholder]
+disclosure: Fixture.
+characters:
+  children: []
+  adults: []
+flags:
+  placeholderFlag:
+    default: false
+    description: Set by p.1-a; read by p.2 and p.3.
+storyline:
+  variable: ScenarioComplete
+  targetOrigin: "*"
+form:
+  title: Fixture form
+  source: none.md
+  sections:
+    - id: "1"
+      title: General Information
+      fields:
+        - { id: incidentTime, label: Time of Incident, kind: text }
+        - { id: location, label: Location, kind: text }
+        - { id: staffPresent, label: Staff Members Present, kind: text }
+    - id: "2"
+      title: Incident Details
+      fields:
+        - { id: before, label: Before, kind: text }
+        - { id: after, label: After, kind: text }
+    - id: "3"
+      title: Medical Care & First Aid
+      fields:
+        - { id: brokeSkin, label: Did the bite break the skin?, kind: choice, options: ["Yes", "No"] }
+        - { id: firstAid, label: First Aid Provided, kind: checks, options: [Washed with soap and water, Applied cold compress/ice, Bandage applied] }
+    - id: "4"
+      title: Parent Notification
+      fields:
+        - { id: bittenParentName, label: Parent Name, kind: text }
+    - id: "5"
+      title: Signatures
+      fields:
+        - { id: staffSignature, label: Educator/Staff Signature, kind: text }

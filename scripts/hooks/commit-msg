@@ -1,0 +1,7 @@
+#!/bin/sh
+# Commit messages are public too: check them against the banned-strings list.
+node scripts/check-public-safety.js --message "$1" || {
+  echo ""
+  echo "Commit stopped: the commit message matched the banned-strings list."
+  exit 1
+}

@@ -1,0 +1,434 @@
+# Scene 3: Pickup. 5:00 PM, front lobby.
+# Policy steps covered: 4 (same-day, in-person, private notification; neither
+# child's identity shared; written Parent Notice) and 5 (finish the form).
+# Dialogue options are the exact words, so they carry no quotation marks.
+
+id: pickup
+title: Pickup
+clock: "5:00 PM"
+place: Front lobby
+
+nodes:
+  - id: "3.0"
+    type: story
+    heading: "3:10 PM: a close call"
+    body:
+      - when: { shadowedDM: true }
+        text: >-
+          At 3:10, D.M. reaches toward a classmate's arm with his mouth open.
+          You are two steps away, with a hand already out. "Hands and teeth to
+          ourselves," you say, and he stops. It was a close call that stayed
+          one.
+      - text: >-
+          At 3:10, D.M. reaches toward a classmate's arm with his mouth open.
+          You are across the room. You cross it fast, just as another child
+          yells, "He's going to bite me!" Nothing happens this time, but your
+          pulse is racing.
+    next: "3.1"
+
+  - id: "3.1"
+    type: story
+    heading: The front lobby, 5:00 PM
+    body: >-
+      The lobby is loud. Three parents wait at the sign-out clipboard. Director
+      Okonkwo is on a call in her office with the door closed. Ms. Whitfield
+      walks in for A.K.
+
+
+      On the desk are two papers: the Biting Incident Reporting Form you have
+      been working on, and the Parent Notice for A.K.'s family.
+    summary: Where and which paper
+    prompt: How do you start?
+    choices:
+      - id: 3.1-a
+        label: >-
+          Ask Ms. Lee to cover the sign-out desk. Step into the hallway with
+          Ms. Whitfield and the Parent Notice.
+        tone: held
+        consequence: >-
+          Ms. Lee takes the clipboard. In the quieter hallway, Ms. Whitfield
+          reads your face and asks what happened.
+        why: >-
+          Step 4 says to talk "gently and privately." The Parent Notice, not
+          the internal form, keeps the other child's name out of her hands.
+        say: Ms. Whitfield, can we step over here for a moment? I want to tell you about A.K.'s day.
+        setFlags: { privateTalk: true }
+        next: "3.2"
+      - id: 3.1-b
+        label: >-
+          Talk to her at the desk while you keep signing families out. Hand her
+          the Parent Notice.
+        tone: risk
+        consequence: >-
+          Two parents in line turn to listen. Ms. Whitfield lowers her voice,
+          but she is tense, and every answer you give is now public.
+        why: >-
+          Step 4 says "privately." A busy lobby is the hardest place to protect
+          either child.
+        next: "3.2"
+      - id: 3.1-c
+        label: >-
+          Step aside with Ms. Whitfield and hand her the Biting Incident
+          Reporting Form. It has all the details.
+        tone: risk
+        outcomeLabel: The internal form went home
+        consequence: >-
+          She reads as she walks. Section 2 names the other child, and she has
+          already seen it.
+        why: >-
+          The reporting form is for the Director only and names both children.
+          The Parent Notice is the paper meant for families.
+        setFlags: { confidentialityBroken: true, privateTalk: true }
+        next: "3.2"
+
+  - id: "3.2"
+    type: dialogue
+    heading: Ms. Whitfield asks
+    body:
+      - when: { privateTalk: true }
+        text: >-
+          The hallway is quieter. A.K. is a few feet away, stacking coats on
+          the bench. Ms. Whitfield stands with her jaw set.
+      - text: >-
+          Right at the desk, two parents in line glance over. Ms. Whitfield
+          lowers her voice, but her eyes are sharp.
+    speaker: Ms. Whitfield
+    line:
+      - when: { confidentialityBroken: true }
+        text: >-
+          I read the form. It says D.M. bit her. Is he going to be kicked out?
+          I don't feel safe leaving her here tomorrow.
+      - text: >-
+          Oh my goodness, let me see her arm. Did it break the skin? And who did
+          this? If another child is biting, I have a right to know who is
+          hurting my daughter.
+    summary: Who did this
+    prompt: What do you say?
+    choices:
+      - id: 3.2-a
+        label: >-
+          The skin didn't break. There's a faint red mark on her forearm. I can't
+          name the other child. We protect every family's privacy, including yours.
+        showIf: { confidentialityBroken: false }
+        tone: held
+        consequence: >-
+          Ms. Whitfield exhales and looks at the mark herself. Then she asks,
+          "Where were you when this happened? Aren't you supposed to be watching
+          them?"
+        why: >-
+          Step 4 asks you to share the incident gently and never reveal the
+          identity of the child who bit. Facts about A.K., offered first, give
+          her mom what she most needs to know.
+        say: I was in the room with the class, and I was with A.K. right away. I'm sorry she was hurt. I can walk you through what we did.
+        next: "3.3"
+      - id: 3.2-b
+        label: You're right, you should know. It was D.M.
+        showIf: { confidentialityBroken: false }
+        tone: risk
+        outcomeLabel: A name was shared
+        consequence: >-
+          Ms. Whitfield's face changes. "D.M.? Is he going to be kicked out? I
+          don't feel safe leaving her here tomorrow." You have named a
+          three-year-old to another family, and you can't take it back.
+        why: >-
+          Step 4 says to protect the identity of the child who bit "under no
+          circumstances." Once a name is out, it travels.
+        say: I can't share the other child's name. I can tell you what happened to A.K. and what we did.
+        setFlags: { confidentialityBroken: true }
+        next: "3.3"
+      - id: 3.2-c
+        label: I can't say. You would need to ask the Director.
+        showIf: { confidentialityBroken: false }
+        tone: partial
+        consequence: >-
+          Ms. Whitfield's voice rises. "You can't tell me anything? I want to
+          speak to the Director right now." The Director's door is closed, and
+          her call is still going.
+        why: >-
+          You protected the other child's name, which the policy requires. You
+          also gave her no facts about A.K., and facts are what the policy lets
+          you share.
+        say: I can't share the other child's name, but I can tell you what happened to A.K. Let me tell Director Okonkwo you would like to talk.
+        next: "3.3"
+      - id: 3.2-d
+        label: Biting is very normal at this age. Please don't worry.
+        showIf: { confidentialityBroken: false }
+        tone: partial
+        consequence: >-
+          Ms. Whitfield stares at you. "Don't worry? She has a mark on her
+          arm." A beat later: "Is the kid who did this going to be kicked out?
+          I don't feel safe leaving her here tomorrow."
+        why: >-
+          Step 4 asks you to discuss the incident gently. Telling a parent not
+          to worry can sound like telling her that her worry doesn't matter.
+        say: I can't speak about another child. The Director reviews every incident, and here is what we are doing in the room to keep children safe.
+        next: "3.3"
+      - id: 3.2-e
+        label: >-
+          I'm sorry. That form was not meant for you, and I should not have
+          given it to you. I'm telling the Director right now.
+        showIf: { confidentialityBroken: true }
+        tone: held
+        outcomeLabel: You owned it
+        consequence: >-
+          Ms. Whitfield's jaw stays tight, but she stops. "Thank you for telling
+          me." She asks to speak with the Director, and you say you will make
+          that happen tonight.
+        why: >-
+          Once a name has slipped, the next step is to stop it spreading and
+          tell the Director, not to hope nobody notices. A direct apology also
+          protects the family's trust in you.
+        say: I'll let Director Okonkwo know right now. Please keep what you read private, for D.M.'s sake and A.K.'s.
+        next: "3.3"
+      - id: 3.2-f
+        label: >-
+          He will get support. I can't talk about him, and I'd ask you not to
+          share what you read.
+        showIf: { confidentialityBroken: true }
+        tone: partial
+        consequence: >-
+          "Support? So you won't say if he stays?" The conversation circles. She
+          has a fair question, and you don't have an answer.
+        why: >-
+          You turned toward protecting D.M., and that matters. But the family
+          also needs to hear that you know the form should not have reached her.
+        next: "3.3"
+      - id: 3.2-g
+        label: Please give that back. You were not supposed to see it.
+        showIf: { confidentialityBroken: true }
+        tone: risk
+        consequence: >-
+          Ms. Whitfield tightens her grip. "You handed it to me." Other
+          parents in the lobby are watching now.
+        why: >-
+          The slip was yours, not hers. Taking the paper back adds a second
+          problem to the first and puts her on the defensive.
+        next: "3.3"
+
+  - id: "3.3"
+    type: dialogue
+    heading: Mr. Delgado arrives
+    body:
+      - when: { confidentialityBroken: true }
+        text: >-
+          At 5:15, Mr. Delgado arrives for D.M. Ms. Whitfield and A.K. have
+          gone, and the lobby is quieter. You have a Parent Notice ready for
+          D.M.'s family. Your stomach is still tight about the form.
+      - text: >-
+          At 5:15, Mr. Delgado arrives for D.M. Ms. Whitfield and A.K. have
+          gone, and the lobby is quieter. You have a Parent Notice ready for
+          D.M.'s family. It describes D.M.'s day only.
+    speaker: Mr. Delgado
+    line: Ms. Lee said you wanted a word. Is D.M. okay? Is he in trouble?
+    summary: D.M.'s family
+    prompt: What do you say?
+    choices:
+      - id: 3.3-a
+        label: >-
+          D.M. bit another child during free play. The child is okay, and I
+          can't share who. Here's what happened and what we're doing to help.
+        tone: held
+        consequence: >-
+          Mr. Delgado's shoulders drop. "Is he hurt?" You tell him D.M. is
+          fine. He asks what he can do at home, and the conversation starts to
+          feel like a partnership.
+        why: >-
+          Step 4 asks for same-day notice to both families, with neither
+          child's identity shared. Facts and a shared plan keep D.M.'s dad on
+          your side.
+        say: Can we work on this together? What have you noticed at home when D.M. gets frustrated?
+        next: "3.4"
+      - id: 3.3-b
+        label: D.M. bit A.K. today. He's a biter, and I need you to deal with it at home.
+        tone: risk
+        outcomeLabel: A name was shared
+        consequence: >-
+          Mr. Delgado stiffens. "A.K.? Does her mom know it was my son?" You
+          have named one child to the other's family and called a three-year-old
+          a biter.
+        why: >-
+          Step 4 says the bitten child's name must not reach the family of the
+          child who bit. Calling D.M. a "biter" also turns a behavior into a
+          label.
+        say: D.M. bit another child during free play. I can't share who. Here is how we handled it, and here is how we can work on it together.
+        setFlags: { confidentialityBroken: true }
+        next: "3.4"
+      - id: 3.3-c
+        label: >-
+          There was an incident today. It's all in the notice. Please read it and
+          ask the Director if you have questions.
+        tone: partial
+        consequence: >-
+          Mr. Delgado reads standing up, lips tight. "But what happened? Is he
+          okay?" The notice answers some of it, and he came for a conversation.
+        why: >-
+          Step 4 says to "notify parents in person at pick-up" when you can.
+          A written notice alone doesn't replace the conversation.
+        say: D.M. bit another child during free play. The child is okay, and I can't share who. I'm happy to talk through the notice with you.
+        next: "3.4"
+
+  - id: "3.4"
+    type: form
+    heading: Back at the desk
+    body:
+      - when: { formPrefilled: true, confidentialityBroken: true }
+        text: >-
+          It is 5:30. Section 4 says both parents were told in person at 5:00
+          and 5:15. That was the plan, not what happened. One box also asks you
+          to confirm that confidentiality was maintained. The Director's call is
+          almost over.
+      - when: { formPrefilled: true }
+        text: >-
+          It is 5:30. Section 4 says both parents were told in person at 5:00
+          and 5:15. That was the plan, and the real times are different. The
+          Director's call is almost over.
+      - when: { confidentialityBroken: true }
+        text: >-
+          It is 5:30. Sections 4 and 5 are still blank, and one box asks you to
+          confirm that confidentiality was maintained. The Director's call is
+          almost over.
+      - text: >-
+          It is 5:30. Both families have been told. Sections 4 and 5 are still
+          blank. The Director's call is almost over.
+    sections:
+      active: ["4", "5"]
+    summary: Closing the loop
+    prompt: What do you do with the form?
+    choices:
+      - id: 3.4-a
+        label: >-
+          Fill in sections 4 and 5, tick the confidentiality box, sign, and hand
+          the form to the Director before you leave.
+        showIf: { confidentialityBroken: false }
+        tone: held
+        consequence:
+          - when: { formPrefilled: true }
+            text: >-
+              You replace the pre-written times with the real ones: 5:05 and
+              5:20. The Director reads the form and signs it. It is done on the
+              day it happened.
+          - text: >-
+              You write the real times, tick the box, and sign. The Director,
+              off her call, reads it and takes it. It is done on the day it
+              happened.
+        why: >-
+          Step 5 asks for the completed form within 24 hours. Finishing it the
+          same day, while the facts are fresh, gives the Director time to review.
+        fill:
+          bittenParentName: Ms. Whitfield
+          bittenTime: "5:05 PM"
+          bittenMethod: In-person at pick-up
+          bitParentName: Mr. Delgado
+          bitTime: "5:20 PM"
+          bitMethod: In-person at pick-up
+          confidentiality: ["Confidentiality of both children was maintained during notification."]
+          staffSignature: Nina Rodriguez
+          staffDate: October 21, 2026
+        next: "3.d"
+      - id: 3.4-b
+        label: >-
+          Fill in sections 4 and 5, but leave the confidentiality box unticked.
+          Tell the Director what happened before you leave.
+        showIf: { confidentialityBroken: true }
+        tone: held
+        outcomeLabel: Honest and on time
+        consequence: >-
+          The Director listens without interrupting. She asks what was said and
+          who heard it, and tells you what comes next. It is an uncomfortable
+          conversation. It also means she hears it from you first.
+        why: >-
+          The box asks you to confirm something that wasn't true, so it can't be
+          ticked. Telling the Director yourself keeps the record honest and
+          gives the center a chance to respond.
+        fill:
+          bittenParentName: Ms. Whitfield
+          bittenTime: "5:05 PM"
+          bittenMethod: In-person at pick-up
+          bitParentName: Mr. Delgado
+          bitTime: "5:20 PM"
+          bitMethod: In-person at pick-up
+          staffSignature: Nina Rodriguez
+          staffDate: October 21, 2026
+        next: "3.d"
+      - id: 3.4-c
+        label: >-
+          Tick the confidentiality box anyway. Ms. Whitfield seemed fine, and it
+          would only cause trouble.
+        showIf: { confidentialityBroken: true }
+        tone: risk
+        consequence: >-
+          The form looks clean. But it now says something that isn't true, and
+          if either family ever talks about what they were told, your signature
+          is on the record.
+        why: >-
+          A form that says confidentiality held when it didn't is worse than one
+          that says it didn't. The Director can only help with a problem she
+          knows about.
+        fill:
+          bittenParentName: Ms. Whitfield
+          bittenTime: "5:05 PM"
+          bittenMethod: In-person at pick-up
+          bitParentName: Mr. Delgado
+          bitTime: "5:20 PM"
+          bitMethod: In-person at pick-up
+          confidentiality: ["Confidentiality of both children was maintained during notification."]
+          staffSignature: Nina Rodriguez
+          staffDate: October 21, 2026
+        next: "3.d"
+      - id: 3.4-d
+        label: Finish it first thing tomorrow. The deadline is 24 hours after the bite.
+        tone: partial
+        consequence: >-
+          The next morning at 9:45, the Director asks for the form. You have
+          thirty minutes, and the pickup conversations are already a blur. You
+          finish on time, and the times are your best guess.
+        why: >-
+          The completed form is due within 24 hours of the incident, which is
+          10:15 the next morning. You would meet the deadline, but waiting costs
+          accuracy and the Director's review time.
+        next: "3.d"
+      - id: 3.4-e
+        label: Wait. The Director will ask for it when she needs it.
+        tone: risk
+        consequence: >-
+          The Director is in meetings until the next afternoon. At 11:30 the
+          next morning, she asks. The window closed at 10:15.
+        why: >-
+          The policy puts the duty on staff, and the completed form is due
+          "within 24 hours." Waiting to be asked misses that.
+        next: "3.d"
+
+  - id: "3.d"
+    type: debrief
+    heading: What this scene was really about
+    body: >-
+      You handled a loud lobby, two families and one form in a single evening.
+      The scene was about protecting both children, giving families facts
+      instead of names or labels, and keeping the record true. The
+      confidentiality rule runs both ways: neither child's identity travels.
+    monday:
+      items:
+        - do: Talk privately. Step away from the sign-out desk.
+          say: Can we step over here for a moment?
+        - do: Give each family facts, not names or labels. Hand over the Parent Notice, never the internal form.
+          say: I can't share the other child's name. We protect every family's privacy.
+        - do: Finish the form the same day, and say so if something slipped.
+    next: end
+
+  - id: end
+    type: wrap
+    heading: One day in Room 4
+    body: >-
+      That was one Wednesday in Room 4. Every choice you made led somewhere
+      real, and none of it is graded. Take the three steps below into your own
+      room. Your program's policy may differ from this fictional center's, so
+      check yours.
+    monday:
+      title: What to do on Monday
+      items:
+        - do: If a child is bitten and you are alone, call the office, keep the room in view, and care for the bitten child first.
+          say: Ms. Lee, it's Room 4. A child was bitten. Can you come now?
+        - do: Write only what you saw and heard, and finish the form the same day.
+          say: D.M. bit A.K. on the right forearm. A faint red mark is visible. The skin is not broken.
+        - do: Tell each family the facts, in private. Never name the other child.
+          say: I can't share the other child's name. We protect every family's privacy.

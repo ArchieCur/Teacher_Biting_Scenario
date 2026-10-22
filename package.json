@@ -1,0 +1,35 @@
+{
+  "name": "teacher-biting-scenario",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Role-based, branching scenarios for early learning teachers, built as static web pages that Storyline can embed.",
+  "license": "MIT",
+  "author": "ArchieCur",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "node scripts/install-hooks.js",
+    "hooks": "node scripts/install-hooks.js",
+    "build": "node scripts/build.js",
+    "dev": "node scripts/build.js --dev --watch",
+    "lint": "node scripts/lint.js",
+    "safety": "node scripts/check-public-safety.js --all",
+    "test": "node --test \"tests/engine/*.test.js\"",
+    "test:browser": "playwright test",
+    "fresh": "node scripts/check-docs-fresh.js",
+    "check": "npm run lint && npm test && npm run build && npm run fresh",
+    "serve": "node scripts/serve.js"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
+    "@fontsource/anybody": "5.1.1",
+    "@fontsource/inter": "5.1.1",
+    "@playwright/test": "1.56.1",
+    "ajv": "8.17.1",
+    "esbuild": "0.24.2",
+    "marked": "15.0.6",
+    "yaml": "2.7.0"
+  }
+}

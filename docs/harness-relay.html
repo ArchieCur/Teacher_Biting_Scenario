@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness relay frame</title>
+<!-- Adds a frame between the harness and the module, like an LMS or player wrapper does. -->
+<style>html, body, iframe { margin: 0; width: 100%; height: 100%; border: 0; display: block; }</style>
+</head>
+<body>
+<iframe id="inner" title="Scenario module"></iframe>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var depth = Number(params.get('depth') || '1');
+  var src = params.get('src') || '';
+  // Only relative paths, so this page cannot be used to frame other sites.
+  if (/^[a-z]+:|^\/\//i.test(src)) return;
+  document.getElementById('inner').src = depth > 1 ? 'harness-relay.html?depth=' + (depth - 1) + '&src=' + encodeURIComponent(src) : src;
+})();
+</script>
+</body>
+</html>

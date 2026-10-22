@@ -1,0 +1,38 @@
+# Capitalized words the child-name check should accept in the middle of a
+# sentence. One word per line. Adults in module.yaml are allowed automatically.
+# Do not add children's names here: children appear by initials only.
+
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+Center
+Policy
+Step
+Section
+Biting
+Incident
+Reporting
+Form
+Juniper
+Valley
+Early
+Learning
+Room
+Parent
+Notice

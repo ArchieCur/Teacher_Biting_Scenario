@@ -1,0 +1,704 @@
+/* Layout ------------------------------------------------------------------ */
+
+#app {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 3rem;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 0;
+}
+
+.topbar__scene {
+  flex: 1 1 14rem;
+}
+
+.topbar__tools {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.stage {
+  display: block;
+}
+
+/* Scene header and progress -------------------------------------------------- */
+
+.scene-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.scene-pill {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: var(--cobalt);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.scene-pill__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.progress__dots {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--white);
+}
+
+.dot--done {
+  background: var(--ink);
+}
+
+.dot--current {
+  background: var(--sun);
+}
+
+/* Fields (cards) ------------------------------------------------------------- */
+
+.field {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.25rem 1.5rem 1.5rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* The small node dot on the left edge. */
+.field::before {
+  content: '';
+  position: absolute;
+  left: -0.4rem;
+  top: 1.55rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--cobalt);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+
+.field__heading {
+  font-size: 1.5rem;
+}
+
+.text > :last-child {
+  margin-bottom: 0;
+}
+
+.disclosure {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--paper);
+  border-left: 4px solid var(--sun);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+/* Buttons --------------------------------------------------------------------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button--primary {
+  background: var(--cobalt);
+  color: var(--white);
+}
+
+.button--primary:hover {
+  background: var(--ink);
+}
+
+.button--secondary,
+.button--tool {
+  background: var(--white);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.button--secondary:hover,
+.button--tool:hover {
+  background: var(--sky-50);
+}
+
+.button--tool {
+  padding: 0.5rem 0.9rem;
+}
+
+.button--icon {
+  padding: 0.5rem;
+  background: transparent;
+  color: var(--ink);
+}
+
+/* Choices ----------------------------------------------------------------------- */
+
+.choices {
+  margin-top: 1.25rem;
+}
+
+.choices__set {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.choices__legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+.choice {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.choice__input {
+  position: absolute;
+  left: 1rem;
+  top: 1.05rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--cobalt);
+}
+
+.choice__label {
+  display: block;
+  min-height: 44px;
+  padding: 0.85rem 1rem 0.85rem 3rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.choice__label:hover {
+  background: var(--paper);
+}
+
+.choice__input:checked + .choice__label {
+  border-color: var(--cobalt);
+  background: var(--sky-50);
+  box-shadow: 0 0 0 2px var(--cobalt);
+}
+
+.choice__input:focus-visible + .choice__label {
+  outline: 3px solid var(--cobalt);
+  outline-offset: 2px;
+}
+
+.choice--words .choice__label::before,
+.locked__text--words::before {
+  content: '\201C';
+}
+
+.choice--words .choice__label::after,
+.locked__text--words::after {
+  content: '\201D';
+}
+
+.locked__text--words > p {
+  display: inline;
+}
+
+.choices__error:empty {
+  display: none;
+}
+
+.choices__error {
+  font-weight: 600;
+  padding-left: 0.75rem;
+  border-left: 4px solid var(--coral);
+}
+
+/* Dialogue ----------------------------------------------------------------------- */
+
+.spoken {
+  margin: 1.25rem 0 0;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--paper);
+  border-left: 4px solid var(--cobalt);
+}
+
+.spoken__speaker {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.spoken__line {
+  margin: 0;
+}
+
+.spoken__line > :last-child {
+  margin-bottom: 0;
+}
+
+/* Consequence ----------------------------------------------------------------------- */
+
+.consequence {
+  margin-top: 1.25rem;
+}
+
+.locked {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--cobalt);
+  background: var(--white);
+  margin-bottom: 1.25rem;
+}
+
+.locked__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.locked__text > :last-child {
+  margin-bottom: 0;
+}
+
+.consequence__heading {
+  margin-top: 0.5rem;
+}
+
+.consequence__sub {
+  margin-top: 1rem;
+}
+
+.outcome {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--ink);
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* Words and icons sit in ink on the tints. Leaf, sun and coral are decoration only. */
+.outcome--held {
+  background: var(--leaf-tint);
+  box-shadow: inset 0 0 0 2px var(--leaf);
+}
+
+.outcome--partial {
+  background: var(--sun-tint);
+  box-shadow: inset 0 0 0 2px var(--sun);
+}
+
+.outcome--risk {
+  background: var(--coral-tint);
+  box-shadow: inset 0 0 0 2px var(--coral);
+}
+
+.say {
+  margin: 0.25rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--sky-50);
+}
+
+.say > :last-child {
+  margin-bottom: 0;
+}
+
+.consequence .button {
+  margin-top: 1.5rem;
+}
+
+/* Form sheet ----------------------------------------------------------------------- */
+
+.sheet {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--ink);
+  background: var(--white);
+}
+
+.sheet__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.sheet__section {
+  border-top: 1px solid rgba(36, 58, 120, 0.25);
+  padding-top: 0.25rem;
+}
+
+.sheet__section-title {
+  margin-top: 0.75rem;
+}
+
+.sheet__group {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.sheet__list {
+  margin: 0;
+}
+
+.sheet__row {
+  padding: 0.35rem 0;
+}
+
+.sheet__label {
+  font-size: 0.95rem;
+}
+
+.sheet__value {
+  margin: 0.2rem 0 0;
+}
+
+.sheet__value--write {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: var(--sky-50);
+}
+
+.sheet__value--empty {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px dashed var(--ink);
+}
+
+.sheet__options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sheet__options li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.2rem 0;
+}
+
+.box {
+  display: inline-flex;
+  flex: none;
+  margin-top: 0.2rem;
+}
+
+.box__mark {
+  display: block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  background: var(--white);
+}
+
+.box__mark--on {
+  background: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--white);
+}
+
+.sheet__row--changed {
+  animation: field-filled 1.6s ease-out;
+  border-radius: 6px;
+}
+
+@keyframes field-filled {
+  from {
+    background: var(--sun-tint);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.sheet__section--later {
+  color: var(--ink);
+}
+
+.sheet__later-tag {
+  display: inline-block;
+  padding: 0.05rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Monday card, glance, timing ------------------------------------------------------- */
+
+.monday {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: inset 0 0 0 2px var(--sun);
+}
+
+.monday__list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.monday__list li {
+  margin-bottom: 0.75rem;
+}
+
+.monday__do > :last-child {
+  margin-bottom: 0.25rem;
+}
+
+.monday__say-label {
+  font-weight: 600;
+}
+
+.glance {
+  margin-top: 1.5rem;
+}
+
+.glance__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.glance__item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(36, 58, 120, 0.2);
+}
+
+.glance__summary {
+  margin: 0;
+  font-weight: 600;
+}
+
+.glance__item .outcome {
+  margin: 0.35rem 0 0;
+}
+
+.timing {
+  margin-top: 1.5rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.timing table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.timing th,
+.timing td {
+  text-align: left;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid rgba(36, 58, 120, 0.2);
+}
+
+.timing__csv {
+  width: 100%;
+  margin-top: 0.75rem;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+/* Dialogs (policy drawer, pause) ---------------------------------------------------- */
+
+.sheet-dialog {
+  width: min(44rem, 100%);
+  max-width: 100%;
+  max-height: 85vh;
+  overflow: auto;
+  margin: auto auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.sheet-dialog[open] {
+  animation: slide-up 0.25s ease-out;
+}
+
+.sheet-dialog::backdrop {
+  background: rgba(36, 58, 120, 0.45);
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.sheet-dialog__bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.75rem 0.5rem 1.25rem;
+  background: var(--white);
+  border-bottom: 1px solid rgba(36, 58, 120, 0.2);
+}
+
+.sheet-dialog__heading {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.sheet-dialog__body {
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+.policy h3 {
+  font-size: 1.2rem;
+}
+
+.policy h4,
+.policy h5,
+.policy h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.25em 0 0.35em;
+}
+
+.policy blockquote {
+  margin: 0 0 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--paper);
+  border-left: 4px solid var(--sun);
+}
+
+.policy blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.policy hr {
+  border: 0;
+  border-top: 1px solid rgba(36, 58, 120, 0.25);
+}
+
+/* Dev panel (dev builds only) -------------------------------------------------------- */
+
+.dev {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  max-width: 18rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+  z-index: 10;
+}
+
+.dev summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.dev select {
+  display: block;
+  width: 100%;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.dev fieldset {
+  margin: 0 0 0.5rem;
+}
+
+.dev__flag {
+  display: block;
+}
+
+/* Wider screens ------------------------------------------------------------------------ */
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
+
+  .field {
+    padding: 1.75rem 2rem 2rem 2.25rem;
+  }
+
+  .field__heading {
+    font-size: 1.75rem;
+  }
+
+  .sheet-dialog {
+    max-width: calc(100% - 2rem);
+    margin: auto;
+    border-radius: var(--radius);
+  }
+}

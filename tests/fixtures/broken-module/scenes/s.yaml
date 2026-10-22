@@ -1,0 +1,54 @@
+id: s
+title: Fixture scene
+nodes:
+  - id: a
+    type: story
+    heading: Start
+    summary: Start
+    prompt: Pick one.
+    body:
+      - when: { neverSet: true }
+        text: Variant without a default after it.
+    choices:
+      - id: a-1
+        label: Go to a node that does not exist.
+        tone: held
+        outcomeLabel: Good job!
+        consequence: You can correct section 4 later. Then Maria came over and talked to B.Z. about it. You tick No for D.M. Then Ms. Lee and Ms. Rivera arrive.
+        why: This is *italic* text.
+        setFlags: { neverRead: true, undeclared: true }
+        fill: { nowhere: "x", skin: "Maybe" }
+        next: missing
+      - id: a-2
+        label: Go to the loop.
+        tone: partial
+        consequence: Fine. 🙂
+        why: Fine.
+        next: b
+  - id: b
+    type: story
+    heading: Loop one
+    summary: Loop one
+    prompt: Pick.
+    choices:
+      - id: b-1
+        label: Only when hidden is on.
+        showIf: { hidden: true }
+        tone: held
+        consequence: Fine.
+        why: Fine.
+        next: c
+  - id: c
+    type: story
+    heading: Loop two
+    next: b
+  - id: stuck
+    type: story
+    heading: Unreachable and stuck
+  - id: d
+    type: debrief
+    heading: Well done, that was perfect!
+    next: e
+  - id: e
+    type: wrap
+    heading: End

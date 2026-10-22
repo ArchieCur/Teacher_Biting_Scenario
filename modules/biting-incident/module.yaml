@@ -1,0 +1,144 @@
+# Module settings for the biting-incident scenario.
+# Scene text lives in scenes/. Engine button labels live in engine/strings/en.yaml.
+
+id: biting-incident
+title: A bite in Room 4
+lang: en
+
+# The first node the learner sees after the intro screen.
+start: "1.0"
+
+# Scene files in scenes/, in playing order (file name without .yaml).
+scenes:
+  - the-moment
+  - nap-time
+  - pickup
+
+intro:
+  heading: A bite in Room 4
+  body: >-
+    You are Nina Rodriguez, a lead teacher in Room 4 at Juniper Valley Early
+    Learning Center. You have been teaching for eight months, and today you are
+    the only adult with eighteen children.
+
+
+    You will move through three moments of one day: the bite, nap time, and
+    pickup. Every decision is yours. There is no score, and there is no going
+    back, because real days don't offer one. The center's policy is always one
+    tap away, and you can pause between scenes.
+
+disclosure: >-
+  The feedback in this module is scripted. It does not use AI.
+  Your own program's policy may differ from this fictional center's.
+
+# Who appears in the scenes. Children appear by initials only.
+# The content lint uses this list to flag names that are not declared here.
+characters:
+  children:
+    - initials: D.M.
+      pronouns: he/him
+      note: A young three. Bites.
+    - initials: A.K.
+      pronouns: she/her
+      note: Bitten.
+  adults:
+    - name: Nina Rodriguez
+      role: Novice lead teacher, Room 4 (the learner's role)
+    - name: Ms. Whitfield
+      role: A.K.'s parent
+    - name: Mr. Delgado
+      role: D.M.'s parent
+    - name: Director Okonkwo
+      role: Center Director
+    - name: Ms. Lee
+      role: Front-office staff who covers rooms in emergencies
+
+# Every flag the scenes use. Each flag must be set by some choice and read
+# somewhere (a variant, a showIf, or a conditional next), or the lint fails.
+flags:
+  calledForHelp:
+    default: false
+    description: You called the front office for backup in 1.1. Changes the room in 1.2 and "Staff Members Present" on the form.
+  checkedSkin:
+    default: false
+    description: You looked closely for broken skin, in 1.2 or later at nap time in 2.2. Changes the wording and options in 2.2.
+  shadowedDM:
+    default: false
+    description: You stayed close to D.M. after the bite in 1.3. Decides what the 3:10 PM close call feels like in 3.0.
+  jottedNote:
+    default: false
+    description: You jotted a quick note in 1.4. Changes how certain the time and details are in scene 2.
+  formPrefilled:
+    default: false
+    description: You wrote section 4 before pickup in 2.3. Changes the wording in 3.4.
+  privateTalk:
+    default: false
+    description: You spoke to Ms. Whitfield away from the sign-out desk in 3.1. Changes the setting in 3.2.
+  confidentialityBroken:
+    default: false
+    description: A child's identity reached the other family, through the wrong paper in 3.1 or in words in 3.2 or 3.3. Decides the options and the confidentiality box in 3.2 and 3.4.
+
+# Storyline completion. The variable must already exist in the Storyline
+# project as a True/False variable. Query parameters can override these:
+# ?sv=VariableName and ?origin=https://example.org
+storyline:
+  variable: ScenarioComplete
+  targetOrigin: "*"
+
+policy:
+  file: source/Biting_Policy_v1.2.md
+  buttonLabel: Policy
+
+# The in-scenario reporting form. Section titles and field labels must match
+# the source form; the lint checks them against the file named in 'source'.
+form:
+  title: Biting Incident Reporting Form
+  source: source/Biting_Incident_Reporting_Form_v1.1.md
+  sections:
+    - id: "1"
+      title: General Information
+      fields:
+        - { id: incidentDate, label: Date of Incident, kind: text }
+        - { id: incidentTime, label: Time of Incident, kind: text }
+        - { id: location, label: Location, kind: text }
+        - { id: staffPresent, label: Staff Members Present, kind: text }
+    - id: "2"
+      title: Incident Details
+      fields:
+        - { id: childBitten, label: Name of Child Bitten, kind: text }
+        - { id: childWhoBit, label: Name of Child Who Bit, kind: text }
+        - { id: before, label: What was happening immediately before the bite occurred?, kind: text }
+        - { id: after, label: Describe what you saw after the bite., kind: text }
+    - id: "3"
+      title: Medical Care & First Aid
+      fields:
+        - { id: brokeSkin, label: Did the bite break the skin?, kind: choice, options: ["Yes", "No"] }
+        - id: firstAid
+          label: First Aid Provided
+          kind: checks
+          options:
+            - Washed with soap and water
+            - Applied cold compress/ice
+            - Bandage applied
+        - { id: firstAidOther, label: Other, kind: text }
+    - id: "4"
+      title: Parent Notification
+      fields:
+        - { id: bittenParentName, group: Child Bitten - Parent Notified, label: Parent Name, kind: text }
+        - { id: bittenTime, group: Child Bitten - Parent Notified, label: Time Notified, kind: text }
+        - { id: bittenMethod, group: Child Bitten - Parent Notified, label: Method, kind: choice, options: [In-person at pick-up, Phone call] }
+        - { id: bitParentName, group: Child Who Bit - Parent Notified, label: Parent Name, kind: text }
+        - { id: bitTime, group: Child Who Bit - Parent Notified, label: Time Notified, kind: text }
+        - { id: bitMethod, group: Child Who Bit - Parent Notified, label: Method, kind: choice, options: [In-person at pick-up, Phone call] }
+        - id: confidentiality
+          label: Check to confirm
+          kind: checks
+          options:
+            - Confidentiality of both children was maintained during notification.
+    - id: "5"
+      title: Signatures
+      fields:
+        - { id: staffSignature, label: Educator/Staff Signature, kind: text }
+        - { id: staffDate, label: Date, kind: text }
+        - { id: directorSignature, label: Center Director Signature, kind: text }
+        - { id: directorDate, label: Date, kind: text }

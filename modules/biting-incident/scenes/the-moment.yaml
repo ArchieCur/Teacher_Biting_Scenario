@@ -1,0 +1,229 @@
+# Scene 1: The moment. 10:15 AM, Room 4.
+# Policy steps covered: 1 (separate, keep the room in view, call the office),
+# 2 (first aid and the skin check), 3 (the child who bit), plus a quick note.
+
+id: the-moment
+title: The moment
+clock: "10:15 AM"
+place: Room 4
+
+nodes:
+  - id: "1.0"
+    type: story
+    heading: Free play in Room 4
+    body: >-
+      It is 10:15 on a Wednesday morning. Eighteen children are in free play,
+      and you are the only adult in Room 4. Ms. Lee at the front office is one
+      phone call away.
+
+
+      In the block center, D.M. and A.K. both reach for the same toy fire
+      truck. Then a sharp cry. D.M. has bitten A.K. on the arm. A.K. is crying.
+      D.M. is rigid, fists tight. Every head in the room turns to you.
+    next: "1.1"
+
+  - id: "1.1"
+    type: story
+    heading: Eighteen children are watching you
+    summary: First move
+    prompt: What do you do first?
+    choices:
+      - id: 1.1-a
+        label: >-
+          Scoop up A.K., carry her to the sink, and leave the other children
+          where they are.
+        tone: risk
+        outcomeLabel: The room got ahead of you
+        consequence: >-
+          Ninety seconds pass at the sink. Behind you, one child climbs a shelf
+          and another tips over a bin of blocks. You come back to a room that
+          has gotten ahead of you.
+        why: >-
+          Policy step 1 says that if you are the only adult, you keep the rest
+          of the class in view and call the office. Leaving the group
+          unsupervised is the one thing it rules out.
+        next: "1.2"
+      - id: 1.1-b
+        label: >-
+          Step between the children, keep the whole room in view, and call the
+          front office for backup.
+        tone: held
+        consequence: >-
+          You separate them with your body and your calm voice, then press the
+          office button. Ms. Lee answers at once and is at your door within two
+          minutes. The room settles because there is a second adult in it.
+        why: >-
+          Step 1 asks you to separate the children calmly and, when you are
+          alone, to keep the class in view and call the office. Help matters
+          most while both children are still upset.
+        say: Ms. Lee, it's Room 4. A child was bitten. Can you come now?
+        setFlags: { calledForHelp: true }
+        next: "1.2"
+      - id: 1.1-c
+        label: >-
+          Separate the children and comfort A.K. where you stand, keeping the
+          room in view. You decide to manage without calling anyone.
+        tone: partial
+        consequence: >-
+          The room stays safe, but you are stretched thin. A.K. needs your
+          hands, D.M. needs your voice, and sixteen other children are
+          drifting. It works, and it costs you.
+        why: >-
+          You kept the class in view, which the policy asks. Step 1 also asks
+          you to call the office when you are the only adult, and that call is
+          what would have freed your hands.
+        next: "1.2"
+
+  - id: "1.2"
+    type: story
+    heading: A.K. is holding her arm
+    body:
+      - when: { calledForHelp: true }
+        text: >-
+          Ms. Lee has taken the class to the story rug for a song. A.K. is
+          crying and holding her right forearm. You kneel beside her.
+      - text: >-
+          A.K. is crying and holding her right forearm. You keep one eye on
+          the room while you kneel beside her.
+    summary: Care for A.K.
+    prompt: How do you care for A.K.?
+    choices:
+      - id: 1.2-a
+        label: >-
+          Press an ice pack straight onto her skin and tell her she is fine and
+          it doesn't even look bad.
+        tone: partial
+        consequence: >-
+          A.K. calms a little, but the cold stings and she pulls away. You
+          never looked at the mark, so you can't say whether the skin is
+          broken.
+        why: >-
+          Step 2 asks you to wash the area, use a cold compress wrapped in a
+          paper towel, and check for broken skin. Looking closely is what lets
+          you answer a parent's first question.
+        next: "1.3"
+      - id: 1.2-b
+        label: >-
+          Wash her arm gently with mild soap and warm water, look closely in
+          good light, then hold a paper-towel-wrapped cold pack on it.
+        tone: held
+        consequence: >-
+          In the light you see a faint red mark on her right forearm. The skin
+          is not broken. A.K. watches the water run, and her breathing slows.
+        why: >-
+          This follows step 2 in order. Checking for broken skin also decides
+          whether the Director and a phone call are needed.
+        say: I'm going to wash your arm, and then it will feel cooler. Can you help me hold this?
+        setFlags: { checkedSkin: true }
+        next: "1.3"
+      - id: 1.2-c
+        label: >-
+          Wash her arm and hold a cold pack on it, but don't look closely. It
+          seems fine and she is upset.
+        tone: partial
+        consequence: >-
+          A.K. is comforted, and the first aid is right. But if someone asks
+          whether the skin broke, all you can say is that you think it didn't.
+        why: >-
+          Washing and cooling follow step 2. The step also asks you to check
+          for broken skin, and "I think so" is a weak answer for a form or a
+          parent.
+        next: "1.3"
+
+  - id: "1.3"
+    type: story
+    heading: D.M. is standing by the wall
+    body: >-
+      D.M. stands against the wall, arms stiff, lip trembling. He isn't
+      crying yet.
+    summary: The child who bit
+    prompt: What do you do for D.M.?
+    choices:
+      - id: 1.3-a
+        label: >-
+          Tell him, "We don't bite. You are being bad," and keep him in a chair
+          until he says sorry.
+        tone: risk
+        consequence: >-
+          D.M. shrinks into the chair and starts to cry. He doesn't say sorry,
+          and he doesn't hear anything else you say. Now you have a second
+          upset child and a room that is no calmer.
+        why: >-
+          Step 3 asks you to name the feeling and redirect, not to label the
+          child. Shame doesn't teach a three-year-old what to do instead of
+          biting.
+        next: "1.4"
+      - id: 1.3-b
+        label: >-
+          Use the policy words, name his feeling, and offer the quiet book
+          corner. Then stay close to him for the rest of the day.
+        tone: held
+        consequence: >-
+          D.M. lets out a long breath and follows you to the book corner. For
+          the rest of the day, you keep him within arm's reach.
+        why: >-
+          This follows steps 1 and 3: calm, firm words, naming the feeling,
+          redirecting, and shadowing him for the rest of the day.
+        say: Biting hurts. We keep our teeth to ourselves. You looked frustrated. Let's find something calm to do.
+        setFlags: { shadowedDM: true }
+        next: "1.4"
+      - id: 1.3-c
+        label: >-
+          Say nothing for now. A.K. needs you more, and D.M. will move on once
+          the room calms down.
+        tone: partial
+        consequence: >-
+          D.M. drifts back to the blocks, still wound up. Nobody has told him
+          what to do instead of biting.
+        why: >-
+          Caring for A.K. first is right, since step 1 puts her first. Step 3
+          follows right after, with the all-day shadowing it asks for.
+        next: "1.4"
+
+  - id: "1.4"
+    type: story
+    heading: Twenty seconds
+    body: >-
+      The room is calm. In twenty seconds the class moves to cleanup, and the
+      details of the last ten minutes start to blur.
+    summary: The quick note
+    prompt: What do you do with those seconds?
+    choices:
+      - id: 1.4-a
+        label: Jot the time, where it happened, and what you saw on a sticky note. Facts only.
+        tone: held
+        consequence: >-
+          You write: 10:15, block center, toy fire truck, right forearm, red
+          mark. It takes fifteen seconds, and you slip the note in your pocket.
+        why: >-
+          A note made in the moment is more exact than memory, and the form
+          will ask for the time, the place and what you saw.
+        setFlags: { jottedNote: true }
+        next: "1.d"
+      - id: 1.4-b
+        label: Trust your memory. You will write it all down at nap time.
+        tone: partial
+        consequence: >-
+          Cleanup begins. By nap time the morning has blurred, and you won't be
+          sure whether it was 10:10 or 10:20.
+        why: >-
+          Memory fades fast on a busy day, and the form asks for specifics.
+          Even a few words jotted now will help.
+        next: "1.d"
+
+  - id: "1.d"
+    type: debrief
+    heading: What this scene was really about
+    body: >-
+      You were alone with eighteen children when a bite happened. The scene was
+      about three things: keeping the room safe, caring for both children in the
+      order the policy sets out, and capturing the facts while they were fresh.
+      What you chose here shapes what you can say later today.
+    monday:
+      items:
+        - do: When you are the only adult, call the office and keep the class in view.
+          say: Ms. Lee, it's Room 4. A child was bitten. Can you come now?
+        - do: Wash, cool, and look closely for broken skin.
+        - do: Name the feeling, redirect, and stay close to the child who bit.
+          say: Biting hurts. We keep our teeth to ourselves. You looked frustrated.
+    next: "2.0"

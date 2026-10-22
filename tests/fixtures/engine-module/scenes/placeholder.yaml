@@ -1,0 +1,116 @@
+# Exercises every node type, a flag, a text variant, a conditional choice,
+# a conditional next, a form fill and the completion event.
+id: placeholder
+title: Placeholder scene
+clock: "10:20 AM"
+place: Room 4
+
+nodes:
+  - id: p.1
+    type: story
+    heading: Placeholder decision one
+    summary: Placeholder decision one
+    body: The first option sets a flag. The second option does not.
+    prompt: What do you do?
+    choices:
+      - id: p.1-a
+        label: Placeholder option that sets the flag.
+        tone: held
+        consequence: The flag is now set.
+        why: The next two nodes read this flag.
+        say: Placeholder words to say.
+        setFlags: { placeholderFlag: true }
+        next: p.2
+      - id: p.1-b
+        label: Placeholder option that leaves the flag unset.
+        tone: partial
+        consequence: The flag stays unset.
+        why: Later text changes because of this choice.
+        next: p.2
+
+  - id: p.2
+    type: form
+    heading: Placeholder form node
+    summary: Placeholder form decision
+    body:
+      - when: { placeholderFlag: true }
+        text: This variant appears because the flag is set.
+      - text: This variant appears because the flag is not set.
+    sections:
+      active: ["1", "2", "3"]
+      later: ["4", "5"]
+      laterNote: Placeholder note for sections that come later.
+    prompt: Which wording goes on the form?
+    choices:
+      - id: p.2-a
+        label: Placeholder objective wording.
+        tone: held
+        fill:
+          incidentTime:
+            - when: { placeholderFlag: true }
+              value: "10:20 AM"
+            - value: "Around 10:20, I think"
+          location: Room 4
+          staffPresent: Placeholder staff name
+          before: Placeholder description of what happened before.
+          after: Placeholder description of what you saw.
+          brokeSkin: "No"
+          firstAid: [Washed with soap and water, Applied cold compress/ice]
+        consequence: Sections 1 to 3 are filled in.
+        why: Placeholder reason about objective wording.
+        next: p.3
+      - id: p.2-b
+        label: Placeholder vague wording.
+        tone: risk
+        fill:
+          before: Placeholder vague description.
+        consequence: Placeholder consequence for vague wording.
+        why: Placeholder reason about vague wording.
+        next: p.3
+
+  - id: p.3
+    type: dialogue
+    heading: Placeholder conversation
+    summary: Placeholder conversation
+    speaker: Placeholder adult
+    line: Placeholder question the adult asks.
+    prompt: What do you say?
+    choices:
+      - id: p.3-a
+        label: Placeholder words that only appear when the flag is set.
+        showIf: { placeholderFlag: true }
+        tone: held
+        consequence: Placeholder consequence for the conditional option.
+        why: Placeholder reason.
+        next: p.debrief
+      - id: p.3-b
+        label: Placeholder words that always appear.
+        tone: partial
+        consequence: Placeholder consequence for the always-shown option.
+        why: Placeholder reason.
+        next: p.debrief
+      - id: p.3-c
+        label: Placeholder words that open a risk.
+        tone: risk
+        outcomeLabel: This opened a risk for later
+        consequence: Placeholder consequence with an outcome label override.
+        why: Placeholder reason.
+        next:
+          - when: { placeholderFlag: true }
+            to: p.debrief
+          - to: p.debrief
+
+  - id: p.debrief
+    type: debrief
+    heading: Placeholder debrief
+    body: Placeholder debrief text.
+    monday:
+      items:
+        - do: Placeholder action.
+          say: Placeholder sample words.
+    next: p.wrap
+
+  - id: p.wrap
+    type: wrap
+    heading: Placeholder wrap
+    body: Placeholder wrap text.

@@ -1,0 +1,16 @@
+[
+  { "fg": "ink", "bg": "white", "min": 4.5, "use": "body text on fields" },
+  { "fg": "ink", "bg": "paper", "min": 4.5, "use": "body text on the page" },
+  { "fg": "ink", "bg": "sun", "min": 4.5, "use": "text on icon chips" },
+  { "fg": "ink", "bg": "sky", "min": 4.5, "use": "text on activity ground" },
+  { "fg": "ink", "bg": "sky-50", "min": 4.5, "use": "form write-in text, selected choices, say-this blocks" },
+  { "fg": "ink", "bg": "leaf-tint", "min": 4.5, "use": "held outcome text and icon" },
+  { "fg": "ink", "bg": "sun-tint", "min": 4.5, "use": "partial outcome text and icon" },
+  { "fg": "ink", "bg": "coral-tint", "min": 4.5, "use": "risk outcome text and icon" },
+  { "fg": "white", "bg": "ink", "min": 4.5, "use": "white text on ink (button hover)" },
+  { "fg": "white", "bg": "cobalt", "min": 4.5, "use": "primary buttons, scene pill" },
+  { "fg": "cobalt", "bg": "white", "min": 3, "use": "focus ring and selected outline on fields" },
+  { "fg": "cobalt", "bg": "paper", "min": 3, "use": "focus ring on the page" },
+  { "fg": "cobalt", "bg": "sky-50", "min": 3, "use": "focus ring on selected choices" },
+  { "fg": "ink", "bg": "leaf", "min": 3, "use": "icons only, never text" }
+]
