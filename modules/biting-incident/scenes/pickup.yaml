@@ -29,6 +29,9 @@ nodes:
   - id: "3.1"
     type: story
     heading: The front lobby, 5:00 PM
+    document:
+      id: parentNotice
+      section: Notice for the family of the child who was bitten
     body: >-
       The lobby is loud. Three parents wait at the sign-out clipboard. Director
       Okonkwo is on a call in her office with the door closed. Ms. Whitfield
@@ -49,8 +52,8 @@ nodes:
           Ms. Lee takes the clipboard. In the quieter hallway, Ms. Whitfield
           reads your face and asks what happened.
         why: >-
-          Step 4 says to talk "gently and privately." The Parent Notice, not
-          the internal form, keeps the other child's name out of her hands.
+          Step 4 says to talk "gently and privately." Give her the Parent
+          Notice. The internal form has the other child's name on it.
         say: Ms. Whitfield, can we step over here for a moment? I want to tell you about A.K.'s day.
         setFlags: { privateTalk: true }
         next: "3.2"
@@ -208,6 +211,9 @@ nodes:
   - id: "3.3"
     type: dialogue
     heading: Mr. Delgado arrives
+    document:
+      id: parentNotice
+      section: Notice for the family of the child who bit
     body:
       - when: { confidentialityBroken: true }
         text: >-
@@ -405,7 +411,8 @@ nodes:
       You handled a loud lobby, two families and one form in a single evening.
       The scene was about protecting both children, giving families facts
       instead of names or labels, and keeping the record true. The
-      confidentiality rule runs both ways: neither child's identity travels.
+      confidentiality rule runs both ways: neither child's name goes home with
+      the other family.
     monday:
       items:
         - do: Talk privately. Step away from the sign-out desk.

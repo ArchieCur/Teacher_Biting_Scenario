@@ -26,3 +26,7 @@ form:
         - { id: when, label: Date of Incident, kind: text }
         - { id: skin, label: Did the bite break the skin?, kind: choice, options: ["Yes", "No"] }
         - { id: invented, label: A label the source form does not have, kind: text }
+documents:
+  notice:
+    file: form.md
+    title: Fixture notice

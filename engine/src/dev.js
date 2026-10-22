@@ -4,7 +4,7 @@
 
 import { h } from './dom.js';
 
-export function mountDev({ content, S, root, jump }) {
+export function mountDev({ content, S, root, jump, setShuffle }) {
   const select = h(
     'select',
     { id: 'dev-node' },
@@ -28,6 +28,12 @@ export function mountDev({ content, S, root, jump }) {
     h('label', { for: 'dev-node' }, S['dev.jump']),
     select,
     h('fieldset', null, h('legend', null, S['dev.flags']), flagBoxes),
+    h(
+      'label',
+      { class: 'dev__toggle' },
+      h('input', { type: 'checkbox', onChange: (e) => setShuffle(e.target.checked) }),
+      ` ${S['dev.shuffle']}`,
+    ),
     h(
       'button',
       {

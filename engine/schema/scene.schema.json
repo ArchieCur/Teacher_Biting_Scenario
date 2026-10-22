@@ -69,6 +69,27 @@
         }
       ]
     },
+    "documentRef": {
+      "description": "Show one section of a document declared under 'documents' in module.yaml. 'section' is a heading in the document; use 'Heading > Sub-heading' to pick a nested one.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "section"],
+          "properties": { "id": { "type": "string" }, "section": { "type": "string" } }
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "section"],
+            "properties": { "when": { "$ref": "#/definitions/when" }, "id": { "type": "string" }, "section": { "type": "string" } }
+          }
+        }
+      ]
+    },
     "monday": {
       "type": "object",
       "additionalProperties": false,
@@ -127,6 +148,8 @@
           }
         },
         "monday": { "$ref": "#/definitions/monday" },
+        "document": { "$ref": "#/definitions/documentRef" },
+        "fixedOrder": { "type": "boolean", "description": "Keep the authored option order instead of shuffling it per learner." },
         "choices": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/choice" } },
         "next": { "$ref": "#/definitions/next" }
       },

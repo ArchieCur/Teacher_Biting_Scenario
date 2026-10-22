@@ -5,7 +5,9 @@
 //   somewhere; every flag combination leaves at least one visible choice;
 //   form fills point at real fields and real options.
 
-import { isVariantList } from '../../engine/src/conditions.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { isVariantList, documentRefs, documentKey } from '../../engine/src/conditions.js';
 
 export function checkGraph(loaded) {
   const { content, locate, sceneSources, moduleSource } = loaded;
@@ -48,7 +50,7 @@ export function checkGraph(loaded) {
   for (const node of Object.values(nodes)) {
     const out = [];
     const id = node.id;
-    for (const key of ['heading', 'body', 'prompt', 'line']) checkVariants(node[key], id, [key], 'text');
+    for (const key of ['heading', 'body', 'prompt', 'line', 'document']) checkVariants(node[key], id, [key], 'text');
     if (node.monday) {
       checkVariants(node.monday.title, id, ['monday', 'title'], 'text');
       node.monday.items.forEach((item, i) => {
@@ -124,7 +126,7 @@ export function checkGraph(loaded) {
 
   for (const node of Object.values(nodes)) {
     const id = node.id;
-    for (const key of ['heading', 'body', 'prompt', 'line']) noteVariantReads(node[key], locate(id, [key]));
+    for (const key of ['heading', 'body', 'prompt', 'line', 'document']) noteVariantReads(node[key], locate(id, [key]));
     noteVariantReads(node.next, locate(id, ['next']));
     if (node.monday) {
       noteVariantReads(node.monday.title, locate(id, ['monday']));
@@ -162,6 +164,22 @@ export function checkGraph(loaded) {
         const combo = used.map((n) => `${n}=${flags[n]}`).join(', ');
         add(locate(node.id, ['choices']), `no choice is visible when ${combo}`);
       }
+    }
+  }
+
+  // Documents shown on nodes -----------------------------------------------------------
+  const declaredDocs = loaded.module.documents || {};
+  for (const node of Object.values(nodes)) {
+    for (const ref of documentRefs(node.document)) {
+      const where = locate(node.id, ['document']);
+      const doc = declaredDocs[ref.id];
+      if (!doc) {
+        add(where, `document "${ref.id}" is not declared under documents in module.yaml`);
+        continue;
+      }
+      const file = path.join(loaded.moduleDir, doc.file);
+      if (!fs.existsSync(file)) add({ file: moduleSource.file, line: moduleSource.lineOf(['documents', ref.id, 'file']) }, `document file ${doc.file} not found`);
+      else if (!content.documentHtml[documentKey(ref)]) add(where, `section "${ref.section}" not found in ${doc.file} (use the heading text exactly; "A > B" for a nested heading)`);
     }
   }
 

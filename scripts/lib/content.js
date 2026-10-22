@@ -9,6 +9,7 @@ import YAML from 'yaml';
 import Ajv from 'ajv';
 import { marked } from 'marked';
 import { ROOT, rel } from './paths.js';
+import { documentRefs, documentKey } from '../../engine/src/conditions.js';
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateModule = ajv.compile(readJson(path.join(ROOT, 'engine/schema/module.schema.json')));
@@ -84,6 +85,62 @@ export function renderPolicy(markdown) {
 }
 
 /**
+ * One section of a markdown document, by heading text. "A > B" picks heading B
+ * inside section A. Returns the section's markdown (its heading included, up to
+ * the next heading of the same or a higher level), or null if not found.
+ */
+export function extractSection(markdown, sectionPath) {
+  const lines = markdown.replace(/^---\n[\s\S]*?\n---\n/, '').split(/\n## Change log\b/)[0].split('\n');
+  const headingAt = (i) => /^(#{1,6})\s+(.*?)\s*$/.exec(lines[i]);
+  let from = 0;
+  let to = lines.length;
+  let level = 0;
+  for (const part of sectionPath.split('>').map((p) => p.trim())) {
+    let found = -1;
+    for (let i = from; i < to; i += 1) {
+      const m = headingAt(i);
+      if (m && m[1].length > level && m[2] === part) {
+        found = i;
+        level = m[1].length;
+        break;
+      }
+    }
+    if (found < 0) return null;
+    from = found;
+    to = lines.length;
+    for (let i = found + 1; i < lines.length; i += 1) {
+      const m = headingAt(i);
+      if (m && m[1].length <= level) {
+        to = i;
+        break;
+      }
+    }
+  }
+  return lines
+    .slice(from, to)
+    .join('\n')
+    .replace(/\n-{3,}\s*$/, '')
+    .trim();
+}
+
+/**
+ * A document section as HTML for the paper card: its heading becomes an h4
+ * (under the card's h3 title), emphasis becomes semibold, and blank lines on
+ * the form (runs of underscores) become a visible line that screen readers
+ * announce as "blank".
+ */
+export function renderDocumentSection(sectionMarkdown) {
+  const level = /^(#{1,6})\s/.exec(sectionMarkdown)?.[1].length || 4;
+  const shift = 4 - level;
+  return marked
+    .parse(sectionMarkdown.replace(/_{4,}/g, '%%BLANK%%'), { gfm: true })
+    .replace(/<(\/?)h([1-6])>/g, (_, slash, n) => `<${slash}h${Math.min(6, Math.max(4, Number(n) + shift))}>`)
+    .replace(/<(\/?)em>/g, '<$1strong>')
+    .replace(/%%BLANK%%/g, '<span class="blank"><span class="sr-only">blank</span></span>')
+    .trim();
+}
+
+/**
  * @returns {{ content: object|null, errors: object[], sources: object, locate: Function, characters: object, moduleDir: string }}
  */
 export function loadModule(moduleDir) {
@@ -127,6 +184,21 @@ export function loadModule(moduleDir) {
     else errors.push({ file: modSource.file, line: modSource.lineOf(['policy', 'file']), message: `policy file ${mod.policy.file} not found`, rule: 'schema' });
   }
 
+  // Document sections that nodes show. Missing documents or sections are left
+  // out here and reported by the graph check with file and line.
+  const documents = {};
+  const documentHtml = {};
+  for (const [id, doc] of Object.entries(mod.documents || {})) documents[id] = { title: doc.title };
+  for (const node of Object.values(nodes)) {
+    for (const ref of documentRefs(node.document)) {
+      const doc = mod.documents?.[ref.id];
+      const file = doc && path.join(moduleDir, doc.file);
+      if (!file || !fs.existsSync(file)) continue;
+      const section = extractSection(readText(file), ref.section);
+      if (section) documentHtml[documentKey(ref)] = renderDocumentSection(section);
+    }
+  }
+
   const content = {
     id: mod.id,
     title: mod.title,
@@ -139,6 +211,8 @@ export function loadModule(moduleDir) {
     policy: mod.policy ? { buttonLabel: mod.policy.buttonLabel || 'Policy' } : null,
     policyHtml,
     form: mod.form ? { title: mod.form.title, sections: mod.form.sections } : null,
+    documents,
+    documentHtml,
     scenes,
     nodes,
   };

@@ -202,6 +202,17 @@ export function FormSheet({ form, values, sections, S, changed = new Set() }) {
   );
 }
 
+/** A source document section (for example the Parent Notice) shown as a sheet of paper. HTML is built at build time from the module's source files. */
+export function DocumentCard({ title, html }) {
+  const headingId = uid('h');
+  return h(
+    'section',
+    { class: 'paper', 'aria-labelledby': headingId },
+    h('h3', { id: headingId, class: 'paper__title' }, iconEl('form'), title),
+    h('div', { class: 'paper__body', html }),
+  );
+}
+
 export function MondayCard({ monday, flags, S }) {
   if (!monday) return null;
   const headingId = uid('h');

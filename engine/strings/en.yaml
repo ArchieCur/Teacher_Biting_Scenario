@@ -64,3 +64,4 @@ dev.open: Dev
 dev.jump: Jump to step
 dev.flags: Flags
 dev.go: Go
+dev.shuffle: Shuffle options (as learners see them)

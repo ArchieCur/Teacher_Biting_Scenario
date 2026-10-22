@@ -9,8 +9,10 @@
 //   sceneStart  snapshot taken when the current scene began, used to resume
 //               safely after the content changes
 //   completed   true once the wrap screen has been reached
+//   seed        this learner's option-order seed (see shuffle.js)
 
 import { matches, pick } from './conditions.js';
+import { newSeed, orderChoices } from './shuffle.js';
 
 export const SAVE_FORMAT = 1;
 
@@ -44,9 +46,10 @@ function structuredCloneSafe(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export function initialState(content) {
+export function initialState(content, seed = newSeed()) {
   const { sceneOf } = indexContent(content);
   const state = {
+    seed,
     node: content.start,
     flags: defaultFlags(content),
     form: {},
@@ -71,6 +74,11 @@ export function stateAtNode(content, nodeId, flagOverrides = {}) {
 
 export function visibleChoices(node, flags) {
   return (node.choices || []).filter((choice) => matches(choice.showIf, flags));
+}
+
+/** Visible choices in this learner's order. Pass seed null for the authored order. */
+export function orderedChoices(node, flags, seed) {
+  return orderChoices(node, seed).filter((choice) => matches(choice.showIf, flags));
 }
 
 export function resolveNext(next, flags) {
@@ -153,15 +161,18 @@ export function fromSaved(saved, content) {
   if (!saved || saved.format !== SAVE_FORMAT) return null;
   const { sceneById } = indexContent(content);
 
+  const seed = typeof saved.seed === 'number' ? saved.seed : newSeed();
+
   if (saved.contentVersion === content.version && content.nodes[saved.node]) {
     const { format, contentVersion, ...state } = saved;
+    state.seed = seed;
     return { state, notice: null };
   }
 
   const snap = saved.sceneStart;
   const scene = snap && sceneById[snap.scene];
   if (scene && content.nodes[snap.node]) {
-    const state = initialState(content);
+    const state = initialState(content, seed);
     state.node = snap.node;
     state.scene = snap.scene;
     for (const name of Object.keys(state.flags)) {
@@ -175,5 +186,5 @@ export function fromSaved(saved, content) {
     return { state, notice: 'scene' };
   }
 
-  return { state: initialState(content), notice: 'restart' };
+  return { state: initialState(content, seed), notice: 'restart' };
 }

@@ -89,6 +89,12 @@ policy:
   file: source/Biting_Policy_v1.2.md
   buttonLabel: Policy
 
+# Documents a node can show as a paper card, with  document: { id, section }
+documents:
+  parentNotice:
+    file: source/Parent_Notice_v1.0.md
+    title: Parent Notice
+
 # The in-scenario reporting form. Section titles and field labels must match
 # the source form; the lint checks them against the file named in 'source'.
 form:

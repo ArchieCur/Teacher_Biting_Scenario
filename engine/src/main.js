@@ -5,12 +5,12 @@ import content from 'virtual:content';
 import S from 'virtual:strings';
 import { h, textBlock, fill } from './dom.js';
 import { icons } from './icons.js';
-import { pick } from './conditions.js';
-import { initialState, stateAtNode, applyChoice, advance, visibleChoices, toSaved, fromSaved, indexContent, SAVE_FORMAT } from './state.js';
+import { pick, pickDocument, documentKey } from './conditions.js';
+import { initialState, stateAtNode, applyChoice, advance, orderedChoices, toSaved, fromSaved, indexContent, SAVE_FORMAT } from './state.js';
 import { createStore } from './storage.js';
 import { bridgeConfig, notifyComplete } from './bridge.js';
 import { createTimer } from './timing.js';
-import { SceneHeader, StoryCard, SpokenLine, ChoiceForm, ConsequenceCard, FormSheet, MondayCard, Glance, TimingLog, Dialog } from './components.js';
+import { SceneHeader, StoryCard, SpokenLine, ChoiceForm, ConsequenceCard, FormSheet, DocumentCard, MondayCard, Glance, TimingLog, Dialog } from './components.js';
 import { mountDev } from './dev.js';
 
 /* global DEV */
@@ -23,6 +23,9 @@ function startApp(root) {
   const bridge = bridgeConfig(content.id, content.storyline, window.location.search);
   const timer = createTimer(DEV || params.get('timing') === '1');
   const { sceneById } = indexContent(content);
+  // Options are shuffled per learner (D34). Dev builds and ?order=authored keep
+  // the authored order; the dev panel can switch shuffling on.
+  let shuffle = !DEV && params.get('order') !== 'authored';
 
   let state = null;
   let shownScene = null;
@@ -175,6 +178,10 @@ function startApp(root) {
       sheet = FormSheet({ form: content.form, values: state.form, sections: node.sections, S });
       extra.push(sheet);
     }
+    const doc = pickDocument(node.document, flags);
+    if (doc && content.documentHtml[documentKey(doc)]) {
+      extra.push(DocumentCard({ title: content.documents[doc.id].title, html: content.documentHtml[documentKey(doc)] }));
+    }
     if (node.monday) extra.push(MondayCard({ monday: node.monday, flags, S }));
 
     const card = StoryCard({ kind: node.type, heading: pick(node.heading, flags), body: pick(node.body, flags), extra });
@@ -183,7 +190,7 @@ function startApp(root) {
     if (node.choices) {
       const choiceForm = ChoiceForm({
         prompt: pick(node.prompt, flags),
-        choices: visibleChoices(node, flags),
+        choices: orderedChoices(node, flags, shuffle ? state.seed : null),
         flags,
         words,
         S,
@@ -261,6 +268,10 @@ function startApp(root) {
       root,
       jump(nodeId, flags) {
         begin(stateAtNode(content, nodeId, flags));
+      },
+      setShuffle(on) {
+        shuffle = on;
+        if (state) showNode();
       },
     });
     const jumpTo = params.get('node');

@@ -702,3 +702,53 @@
     border-radius: var(--radius);
   }
 }
+
+/* Paper documents (Parent Notice) ------------------------------------------------- */
+
+.paper {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  background: var(--white);
+  border: 1px solid rgba(36, 58, 120, 0.35);
+  box-shadow: var(--shadow);
+}
+
+.paper__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(36, 58, 120, 0.25);
+}
+
+.paper__body h4,
+.paper__body h5,
+.paper__body h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1rem 0 0.35rem;
+}
+
+.paper__body ul {
+  padding-left: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.paper__body li {
+  margin: 0.2rem 0;
+}
+
+/* A blank line on a printed form. Screen readers hear "blank". */
+.blank {
+  display: inline-block;
+  min-width: 6rem;
+  border-bottom: 1px solid var(--ink);
+  vertical-align: baseline;
+}
+
+.dev__toggle {
+  display: block;
+  margin-bottom: 0.5rem;
+}

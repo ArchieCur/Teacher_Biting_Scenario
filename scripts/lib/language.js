@@ -105,6 +105,37 @@ export function checkLanguage(loaded, { strings } = {}) {
 
   walkTexts(loaded, checkOne);
 
+  // Quoted policy words in "Why" text must match the policy exactly (Handoff 01a section 3).
+  // A quote counts as a policy quote when it follows a policy reference closely
+  // ("Step 4 says to talk "gently and privately.""); other quotes are speech.
+  const policyFile = loaded.module.policy && path.join(loaded.moduleDir, loaded.module.policy.file);
+  if (policyFile && fs.existsSync(policyFile)) {
+    const policy = normalize(readText(policyFile));
+    walkTexts(loaded, (text, { where, field }) => {
+      if (field !== 'why' && !field.startsWith('why[')) return;
+      for (const m of text.matchAll(/["“]([^"”]+)["”]/g)) {
+        const quote = m[1].replace(/[.,;:!?]+$/, '');
+        const before = text.slice(Math.max(0, m.index - 40), m.index);
+        const citesPolicy = /\b(?:says|asks|requires|states|reads|policy|step \d)\b[^"“.]{0,20}$/i.test(before);
+        if (citesPolicy && quote.split(/\s+/).length >= 2 && !policy.includes(normalize(quote))) {
+          problems.push({ ...where, message: `quoted words "${quote}" are not in the policy word for word`, rule: 'quotes' });
+        }
+      }
+    });
+  }
+
+  // Guessing by length (D34): warn when the held option is the longest in most decisions.
+  const decisions = Object.values(loaded.content.nodes).filter((n) => n.choices?.length > 1);
+  const words = (c) => String(isVariantList(c.label) ? c.label[c.label.length - 1].text : c.label).split(/\s+/).length;
+  const heldLongest = decisions.filter((n) => [...n.choices].sort((a, b) => words(b) - words(a))[0].tone === 'held').length;
+  if (decisions.length && heldLongest > decisions.length / 2) {
+    warnings.push({
+      file: loaded.moduleSource.file,
+      message: `the held option is the longest in ${heldLongest} of ${decisions.length} decisions, so length gives the answer away (the per-learner shuffle hides position, not length)`,
+      rule: 'option-length',
+    });
+  }
+
   // Engine strings get the emoji and markup checks too.
   for (const [key, value] of Object.entries(strings || {})) {
     if (typeof value === 'string') checkOne(value, { where: { file: 'engine/strings', line: null }, scope: 'strings', field: key });

@@ -43,6 +43,12 @@ function choiceBlock(choice) {
 </div>`;
 }
 
+function docRow(ref) {
+  if (!ref) return '';
+  const list = Array.isArray(ref) ? ref : [ref];
+  return list.map((r) => `${r.when ? `<span class="when">when ${esc(cond(r.when))}</span> ` : ''}<code>${esc(r.id)}</code>: ${esc(r.section)}`).join('<br>');
+}
+
 function mondayBlock(monday) {
   if (!monday) return '';
   return `<div class="monday"><strong>${monday.title ? text(monday.title) : 'Monday card'}</strong><ol>${monday.items
@@ -62,7 +68,7 @@ export function renderPreview(content) {
           const n = content.nodes[id];
           return `<section class="node" id="node-${esc(id)}">
   <h3><code>${esc(id)}</code> <span class="type">${esc(n.type)}</span> ${text(n.heading)}</h3>
-  <table>${row('Summary', esc(n.summary))}${row('Body', text(n.body))}${row('Speaker', esc(n.speaker))}${row('Line', text(n.line))}${row('Form sections', n.sections ? esc(`now: ${(n.sections.active || []).join(', ')}; later: ${(n.sections.later || []).join(', ')}`) : '')}${row('Prompt', text(n.prompt))}${row('Next', text(n.next, 'to'))}</table>
+  <table>${row('Summary', esc(n.summary))}${row('Body', text(n.body))}${row('Speaker', esc(n.speaker))}${row('Line', text(n.line))}${row('Form sections', n.sections ? esc(`now: ${(n.sections.active || []).join(', ')}; later: ${(n.sections.later || []).join(', ')}`) : '')}${row('Document', docRow(n.document))}${row('Prompt', text(n.prompt))}${row('Next', text(n.next, 'to'))}</table>
   ${(n.choices || []).map(choiceBlock).join('')}
   ${mondayBlock(n.monday)}
 </section>`;

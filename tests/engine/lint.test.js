@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { ROOT } from '../../scripts/lib/paths.js';
-import { loadModule, renderPolicy } from '../../scripts/lib/content.js';
+import { loadModule, renderPolicy, extractSection, renderDocumentSection } from '../../scripts/lib/content.js';
 import { checkGraph } from '../../scripts/lib/graph.js';
 import { checkLanguage, checkNames, checkFormSource } from '../../scripts/lib/language.js';
 import { checkContrast, ratio } from '../../scripts/lib/contrast.js';
@@ -121,4 +121,24 @@ test('safety: list comes from the environment first; comments and blanks are ign
   assert.deepEqual(list.terms, ['alpha', 'beta']);
   assert.deepEqual(findBannedLines('x\nALPHA here', list.terms), [2]);
   assert.equal(loadBannedList({ BANNED_STRINGS_FILE: path.join(ROOT, 'no-such-file') }), null);
+});
+
+test('documents: a missing section or an undeclared document fails the lint', () => {
+  const problems = checkGraph(broken);
+  const text = messages(problems);
+  assert.ok(has(problems, /section "No such heading" not found in form\.md/), text);
+  assert.ok(has(problems, /document "undeclaredDoc" is not declared/), text);
+});
+
+test('documents: sections are found by heading, "A > B" picks a nested heading', () => {
+  const md = '---\nx: y\n---\n# Doc\n\n### One\n\ntext one\n\n#### Example\n\nex one\n\n---\n\n### Two\n\n#### Example\n\nex two\n\n## Change log\n\nold';
+  assert.equal(extractSection(md, 'One'), '### One\n\ntext one\n\n#### Example\n\nex one');
+  assert.equal(extractSection(md, 'Two > Example'), '#### Example\n\nex two');
+  assert.equal(extractSection(md, 'Three'), null);
+  assert.equal(extractSection(md, 'Change log'), null);
+  const html = renderDocumentSection('### One\n\n- **Name:** ____\n\n#### Example\n\n*note*');
+  assert.match(html, /<h4>One<\/h4>/);
+  assert.match(html, /<h5>Example<\/h5>/);
+  assert.match(html, /<span class="blank"><span class="sr-only">blank<\/span><\/span>/);
+  assert.doesNotMatch(html, /<em>|____/);
 });

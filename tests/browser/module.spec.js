@@ -185,3 +185,37 @@ test('no network requests leave the page', async ({ page }) => {
   await playByKeyboard(page);
   expect(external).toEqual([]);
 });
+
+test('the Parent Notice shows as a paper card at 3.1, with blanks announced as "blank"', async ({ page }) => {
+  await page.goto(MODULE);
+  await page.getByRole('button', { name: 'Begin' }).click();
+  await playUntil(page, '3.1');
+  const paper = page.locator('.paper');
+  await expect(paper.getByRole('heading', { name: 'Parent Notice' })).toBeVisible();
+  await expect(paper).toContainText('Notice for the family of the child who was bitten');
+  await expect(paper).toContainText('A.K. was bitten by another child on the right forearm');
+  await expect(paper).not.toContainText('D.M.');
+  await expect(paper.locator('.blank .sr-only').first()).toHaveText('blank');
+  await expectNoAxeViolations(page, 'Parent Notice at 3.1');
+});
+
+test('options are shuffled per learner and keep their order after a reload', async ({ page }) => {
+  const order = () => page.locator('form.choices input').evaluateAll((els) => els.map((e) => e.value));
+
+  await page.goto(`${MODULE}?order=authored`);
+  await page.getByRole('button', { name: 'Begin' }).click();
+  await playUntil(page, '1.1');
+  expect(await order()).toEqual(['1.1-a', '1.1-b', '1.1-c']);
+
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(MODULE);
+  await page.getByRole('button', { name: 'Begin' }).click();
+  await playUntil(page, '1.1');
+  const first = await order();
+  expect([...first].sort()).toEqual(['1.1-a', '1.1-b', '1.1-c']);
+
+  await page.reload();
+  await page.getByRole('button', { name: 'Pick up where I left off' }).click();
+  await expect(page.locator('main article')).toHaveAttribute('data-node', '1.1');
+  expect(await order()).toEqual(first);
+});

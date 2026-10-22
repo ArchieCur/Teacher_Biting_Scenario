@@ -4,7 +4,8 @@ import path from 'node:path';
 import { ROOT } from '../../scripts/lib/paths.js';
 import { loadModule } from '../../scripts/lib/content.js';
 import { matches, pick } from '../../engine/src/conditions.js';
-import { initialState, applyChoice, advance, visibleChoices, toSaved, fromSaved, stateAtNode } from '../../engine/src/state.js';
+import { initialState, applyChoice, advance, visibleChoices, orderedChoices, toSaved, fromSaved, stateAtNode } from '../../engine/src/state.js';
+import { orderChoices } from '../../engine/src/shuffle.js';
 
 // A fixed fixture module, so these tests do not change when the real content does.
 const { content } = loadModule(path.join(ROOT, 'tests/fixtures/engine-module'));
@@ -96,4 +97,30 @@ test('dev jump: state at any node with chosen flags', () => {
   const state = stateAtNode(content, 'p.3', { placeholderFlag: true });
   assert.equal(state.node, 'p.3');
   assert.equal(state.flags.placeholderFlag, true);
+});
+
+test('shuffle: every option is kept, the order is stable for one learner and differs between learners', () => {
+  const node = { id: 'n', choices: ['a', 'b', 'c', 'd', 'e'].map((id) => ({ id })) };
+  const ids = (seed) => orderChoices(node, seed).map((c) => c.id);
+  assert.deepEqual([...ids(42)].sort(), ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(ids(42), ids(42));
+  const orders = new Set(Array.from({ length: 20 }, (_, i) => ids(i).join('')));
+  assert.ok(orders.size > 5, `only ${orders.size} different orders from 20 seeds`);
+  assert.deepEqual(ids(null), ['a', 'b', 'c', 'd', 'e']);
+  assert.deepEqual(orderChoices({ ...node, fixedOrder: true }, 42).map((c) => c.id), ['a', 'b', 'c', 'd', 'e']);
+});
+
+test('shuffle: hidden options stay hidden and the rest keep their shuffled order', () => {
+  const node = content.nodes['p.3'];
+  const all = orderedChoices(node, { placeholderFlag: true }, 7).map((c) => c.id);
+  const some = orderedChoices(node, { placeholderFlag: false }, 7).map((c) => c.id);
+  assert.deepEqual(some, all.filter((id) => id !== 'p.3-a'));
+});
+
+test('shuffle: the seed is saved and survives a resume, including after a content update', () => {
+  const state = applyChoice(initialState(content, 1234), content, 'p.1-a').state;
+  const saved = JSON.parse(JSON.stringify(toSaved(state, content)));
+  assert.equal(fromSaved(saved, content).state.seed, 1234);
+  assert.equal(fromSaved({ ...saved, contentVersion: 'older' }, content).state.seed, 1234);
+  assert.equal(typeof fromSaved({ ...saved, seed: undefined }, content).state.seed, 'number');
 });

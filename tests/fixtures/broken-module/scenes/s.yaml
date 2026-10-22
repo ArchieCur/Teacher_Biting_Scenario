@@ -28,6 +28,12 @@ nodes:
   - id: b
     type: story
     heading: Loop one
+    document:
+      - when: { hidden: true }
+        id: notice
+        section: No such heading
+      - id: undeclaredDoc
+        section: General Information
     summary: Loop one
     prompt: Pick.
     choices:

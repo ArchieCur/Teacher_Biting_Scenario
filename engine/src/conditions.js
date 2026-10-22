@@ -18,6 +18,20 @@ export function isVariantList(value) {
   return Array.isArray(value) && value.length > 0 && typeof value[0] === 'object' && value[0] !== null;
 }
 
+/** A node's `document`: one { id, section } or a variant list of them. Returns the one that applies, or null. */
+export function pickDocument(ref, flags) {
+  if (!ref) return null;
+  if (!Array.isArray(ref)) return ref;
+  return ref.find((variant) => matches(variant.when, flags)) || null;
+}
+
+/** Every document a node can show, whatever the flags. */
+export function documentRefs(ref) {
+  return !ref ? [] : Array.isArray(ref) ? ref : [ref];
+}
+
+export const documentKey = (ref) => `${ref.id}#${ref.section}`;
+
 /**
  * Resolve a plain value or a variant list against the current flags.
  * @param {unknown} value

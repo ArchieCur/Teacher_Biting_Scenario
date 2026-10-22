@@ -57,9 +57,28 @@ Each scenario is a small, self-contained web page. It runs in any modern browser
 
 Open it from a folder and route B works. Route A needs a local web server, because browsers treat local files as separate sites: run `npm run serve` (see below) and open the address it prints.
 
-## Timing log
+## Running a timing test with volunteers
 
-Add `?timing=1` to the scenario address (or tick **Timing log** in the harness). At the end, a table shows how long each step took. It stays on that device. Select the text box to copy it.
+Volunteers need only a browser, on a phone or a computer. Nothing to install, no account.
+
+**Before the test (ArchieCur):** send each volunteer the scenario address with `?timing=1` added at the end, for example:
+`https://<your GitHub Pages address>/biting-incident/index.html?timing=1`
+(GitHub Pages must be turned on first, see below.)
+
+**Ask each volunteer to:**
+
+1. Open the link and go through the whole scenario **in one sitting**, at their normal pace. The timing log starts over if the page is reloaded or closed.
+2. Read everything as they would in real training. There is no score.
+3. Note, on paper or in a message: any moment they stopped (a phone call, a break), roughly how long, and in which scene. The log keeps counting during a stop.
+4. On the last screen ("Your day at a glance"), scroll to **Timing log**. Press and hold (phone) or click (computer) in the text box, select all the text, copy it, and paste it into an email or message to you, with their notes from step 3.
+
+**What the log shows:** one row per step (for example `1.1`, `2.d`), the seconds spent deciding, the seconds spent reading the feedback, and a total. Step numbers start with the scene: 1 is the moment, 2 is nap time, 3 is pickup. Add up the rows per scene for minutes per scene, and subtract any stops the volunteer reported.
+
+**Where it is saved:** nowhere. The log exists only on the volunteer's screen until they copy it. Nothing is sent anywhere.
+
+**Deciding (D35):** if the median of three volunteers is over 15 minutes, apply the cut order in Handoff 03. If it is 15 minutes or under, change nothing.
+
+The Storyline test harness also has a **Timing log** box for testing on your own computer.
 
 ---
 
@@ -91,6 +110,8 @@ Type these in the terminal, in the repository folder.
 | `npm run serve` | Serves `docs/` at http://localhost:8080 (only on this computer), so route A can be tested in the harness. Ctrl+C stops it. |
 
 **Content preview:** after a build, open `docs/previews/biting-incident.html` to read every step, option and variant on one page.
+
+**Option order:** each learner sees the options in a shuffled order, which stays the same if they pause and come back. To see the order as written (for example while reviewing), add `?order=authored` to the address. The dev build keeps the written order and has a shuffle switch in the Dev panel.
 
 ## Where things are
 

@@ -88,6 +88,19 @@
         "buttonLabel": { "type": "string" }
       }
     },
+    "documents": {
+      "description": "Source documents that nodes can show as a paper card (node field 'document').",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "title"],
+        "properties": {
+          "file": { "type": "string" },
+          "title": { "type": "string" }
+        }
+      }
+    },
     "form": {
       "type": "object",
       "additionalProperties": false,
