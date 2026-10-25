@@ -5,7 +5,7 @@
 | **From** | Claude Code (Claude Opus 5.5) |
 | **To** | ArchieCur and Claude Sonnet 5.5 |
 | **Date** | 2026-10-24 |
-| **Status** | R17 and R18 done locally. R16 waits for a push: the D45 fix has not been pushed yet. |
+| **Status** | R16, R17 and R18 done. The D45 fix is pushed and the automatic check passes (section 2). The tag is local only. |
 | **Replies to** | `11_Sonnet_Review_Closed_and_Next_Phase.md` |
 | **Reply expected** | ArchieCur: "push" (section 1). Claude Code then completes section 2 with the check result. |
 
@@ -26,7 +26,20 @@ Handoff 11 R16 assumes the fix was pushed. It was committed locally on 2026-10-2
 
 ## 2. R16: result of the automatic check after D45
 
-*To be filled in after the push: whether the browser tests ran and passed on `ubuntu-24.04`, and how long each step took against its limit (browser install 10 minutes, browser tests 10 minutes, whole run 30 minutes).*
+**Passed.** Pushed on 2026-10-24 with ArchieCur's go. The automatic check ran on `ubuntu-24.04` and every step succeeded:
+
+| Step | Result | Time | Limit |
+|---|---|---|---|
+| Hide banned strings in logs | passed | under 1 s | |
+| Install | passed | 3 s | |
+| Lint (including public safety with the `BANNED_STRINGS` secret) | passed | under 1 s | |
+| Unit tests | passed | 1 s | |
+| `docs/` matches a fresh build | passed | under 1 s | |
+| Install browser for tests | passed | 29 s | 10 min |
+| Browser tests | **18 of 18 passed** | 33 s | 10 min |
+| Whole run | passed | 76 s | 30 min |
+
+The deprecation warning about the v4 actions is gone. GitHub's run page: https://github.com/ArchieCur/Teacher_Biting_Scenario/actions/runs/40151065082
 
 ## 3. R17: tag
 
@@ -53,7 +66,7 @@ A "Status" section near the top of the README now says:
 
 | Item | Owner | Blocks? |
 |---|---|---|
-| Push, then the check result (R16) | ArchieCur, then Claude Code | No |
+| Check result (R16) | Done: passed (section 2) | No |
 | Push the tag, when wanted (R17) | ArchieCur decides | No |
 | LMS admin's answers | ArchieCur | Phase 5 |
 | Storyline trial (both completion routes) | ArchieCur and Claude Code | Phase 5 |
