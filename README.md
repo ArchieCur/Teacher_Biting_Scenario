@@ -6,7 +6,15 @@ Each scenario is a small, self-contained web page. It runs in any modern browser
 
 > The feedback in these scenarios is scripted. It does not use AI. The center, the policy and the people are fictional.
 
-**Status:** prototype. All three scenes are written and pass the automatic checks. Next: showing the Parent Notice as a document, shuffling option order, and timing tests with volunteers (see `Handoffs/`).
+## Status
+
+**Prototype, version 0.1.0, reviewed and ready to show stakeholders** (October 2026).
+
+- **What it is:** one complete module, "A bite in Room 4": three scenes, eleven decisions, a reporting form filled in through choices, a Parent Notice, a policy reference that is always one tap away, and a summary at the end. Try it at https://archiecur.github.io/Teacher_Biting_Scenario/biting-incident/index.html
+- **Feedback is scripted and contains no AI.** Every consequence and explanation was written in advance. Nothing a learner does is sent anywhere.
+- **Reviewed:** played through on phones, timed (no cuts needed), and checked for realism by the instructional designer (see `Handoffs/RealismView.md` and Handoff 11).
+- **Not yet tested:** embedding in Storyline and delivery through the LMS. The completion signal works in the included test harness, but has not been tried in a real Storyline course or LMS.
+- **Built by** ArchieCur with Claude Sonnet 5.5 and Claude Code (see Contributors below). The full decision trail is in `Handoffs/`.
 
 ---
 
